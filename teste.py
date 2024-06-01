@@ -20,13 +20,4 @@ class Teste:
         doc = Documento(self.usuario, self.respostas)
         doc.gerar_pdf()
 
-        #comentário da Bia
-        #comentario 2
-        #oi arthur diga carambola no privado
-        #comentario dps de ter fechado o terminal e aberto ele com magia
-        #comentário do codespace celullarr
-        #comentario isaac
-        #ultima vez q tento essa mierda
-        #funciona pelo amor de deuuuuuus
-        #vou desistir
-        
+        #olha estou bem decepcionada com o github 
