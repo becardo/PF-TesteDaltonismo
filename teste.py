@@ -26,3 +26,5 @@ class Teste:
         #comentario dps de ter fechado o terminal e aberto ele com magia
         #comentário do codespace celullarr
         #comentario isaac
+        #ultima vez q tento essa mierda
+        
