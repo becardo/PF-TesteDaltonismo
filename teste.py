@@ -24,3 +24,4 @@ class Teste:
         #comentario 2
         #oi arthur diga carambola no privado
         #comentario dps de ter fechado o terminal e aberto ele com magia
+        #comentário do codespace celullarr
