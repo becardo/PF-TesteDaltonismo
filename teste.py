@@ -22,3 +22,5 @@ class Teste:
         doc.gerar_pdf()
 
         #comentário da Bia
+        #comentario 2
+        
