@@ -17,10 +17,10 @@ class Teste:
         # Lógica para analisar os resultados e determinar o tipo de daltonismo
         pass
 
-    def gerar_documento(self):
         doc = Documento(self.usuario, self.respostas)
         doc.gerar_pdf()
 
         #comentário da Bia
         #comentario 2
-        
+        #oi arthur diga carambola no privado
+        #comentario dps de ter fechado o terminal e aberto ele com magia
