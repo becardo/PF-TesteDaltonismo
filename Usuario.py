@@ -1,9 +1,8 @@
 from tkinter import *
-from Documento import Documento
 
 janela_usuario = Tk()
 
-class Usuario(Documento):
+class Usuario():
     def __init__(self):
         self.janela_usuario = janela_usuario
         self.espec_tela()
