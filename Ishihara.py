@@ -1,18 +1,26 @@
 import tkinter as tk
+from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 
-class Ishihara:
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Teste de Ishihara")
+janela_ishihara = Tk()
 
-        self.window_width = 600
-        self.window_height = 700
-        self.master.geometry(f"{self.window_width}x{self.window_height}")
+class Ishihara():
+    def __init__(self):
+        self.janela_ishihara = janela_ishihara
+        self.espec_janela()
         
-        self.canvas = tk.Canvas(master)
-        self.scrollbar = tk.Scrollbar(master, orient="vertical", command=self.canvas.yview)
+        janela_ishihara.mainloop()
+        
+    def espec_janela(self):
+        self.janela_ishihara.title("Teste de Ishihara")
+
+        self.largura_janela = 800
+        self.altura_janela = 600
+        self.janela_ishihara.geometry(f"{self.largura_janela}x{self.altura_janela}")
+        
+        self.canvas = tk.Canvas(janela_ishihara)
+        self.scrollbar = tk.Scrollbar(janela_ishihara, orient="vertical", command=self.canvas.yview)
         self.scrollable_frame = ttk.Frame(self.canvas)
 
         self.scrollable_frame.bind(
@@ -29,7 +37,7 @@ class Ishihara:
         self.scrollbar.pack(side="right", fill="y")
 
         # lista com as placas de Ishihara, opções e respostas esperadas para cada caso 
-        self.ishihara_plates = [
+        self.ishihara_placas = [
             {"image": "ishihara/Ishihara01.png", "options": ["1", "2", "12"], "expected": {"normal": "12", "protanopia": "1", "deuteranopia": "2"}},
             {"image": "ishihara/Ishihara02.png", "options": ["3", "6", "8"], "expected": {"normal": "8", "protanopia": "3"}},
             {"image": "ishihara/Ishihara03.png", "options": ["3", "5", "6"], "expected": {"normal": "6", "protanopia": "5"}},
@@ -71,103 +79,100 @@ class Ishihara:
             # fiz só com 33 placas, mas tem que colocar as 38 placas do pdf
         ]
 
-        self.user_responses = []
-        self.current_index = 0
+        self.resp_t = []
+        self.imagem_atual = 0
 
         # criando os widgets
-        self.plate_label = tk.Label(self.scrollable_frame, text="Placa 1")
-        self.plate_label.pack(pady=(10, 0))
+        self.tx_placa = tk.Label(self.scrollable_frame, text="Placa 1")
+        self.tx_placa.pack(pady=(10, 0))
 
-        self.image_label = tk.Label(self.scrollable_frame)
-        self.image_label.pack(pady=(10, 0))
+        self.tx_imagem = tk.Label(self.scrollable_frame)
+        self.tx_imagem.pack(pady=(10, 0))
 
-        self.option_var = tk.StringVar()
-        self.option_var.trace('w', self.option_selected)
+        self.op_var = tk.StringVar()
+        self.op_var.trace('w', self.selecionar_op)
         
-        self.option_menu = ttk.Combobox(self.scrollable_frame, textvariable=self.option_var, state="readonly")
-        self.option_menu.pack(pady=(10, 0))
+        self.op_menu = ttk.Combobox(self.scrollable_frame, textvariable=self.op_var, state="readonly")
+        self.op_menu.pack(pady=(10, 0))
 
-        self.next_button = tk.Button(self.scrollable_frame, text="Próxima", command=self.next_image, state=tk.DISABLED)
-        self.next_button.pack(pady=(10, 0))
+        self.bt_proxima = tk.Button(self.scrollable_frame, text="Próxima", command=self.px_imagem, state=tk.DISABLED)
+        self.bt_proxima.pack(pady=(10, 0))
 
-        self.results_label = tk.Label(master, text="")
-        self.results_label.pack(pady=(10, 0))
+        self.tx_resultado = tk.Label(janela_ishihara, text="")
+        self.tx_resultado.pack(pady=(10, 0))
 
         # exibe a primeira imagem
-        self.show_image(self.current_index)
+        self.mostrar_imagem(self.imagem_atual)
 
-    def show_image(self, index):
-        if index >= len(self.ishihara_plates):
-            self.show_results()
-            self.next_button.config(state=tk.DISABLED)
+    def mostrar_imagem(self, index):
+        if index >= len(self.ishihara_placas):
+            self.msotrar_resultados()
+            self.bt_proxima.config(state=tk.DISABLED)
             return
 
-        plate = self.ishihara_plates[index]
+        plate = self.ishihara_placas[index]
 
         # carrega a imagem
         image = Image.open(plate["image"])
-        image = image.resize((self.window_width - 50, self.window_width - 50), Image.Resampling.LANCZOS)  # tamanho padrão a imagem para tamanho da janela -50
+        image = image.resize((self.largura_janela - 350, self.largura_janela - 350), Image.Resampling.LANCZOS)  # tamanho padrão a imagem para tamanho da janela -50
         photo = ImageTk.PhotoImage(image)
 
         # atualiza o rótulo da imagem
-        self.image_label.config(image=photo)
-        self.image_label.image = photo  # manetm uma referência da imagem pra não dar erro
+        self.tx_imagem.config(image=photo)
+        self.tx_imagem.image = photo  # manetm uma referência da imagem pra não dar erro
 
         # atualiza o rótulo da placa
-        self.plate_label.config(text=f"Placa {index + 1}")
+        self.tx_placa.config(text=f"Placa {index + 1}")
 
         # atualiza as opções da caixa de seleção
-        self.option_menu['values'] = plate["options"]
-        self.option_var.set("")  # reseta a seleção
-        self.next_button.config(state=tk.DISABLED)
+        self.op_menu['values'] = plate["options"]
+        self.op_var.set("")  # reseta a seleção
+        self.bt_proxima.config(state=tk.DISABLED)
         
-    def option_selected(self, *args):
-        if self.option_var.get():  # Se uma opção estiver selecionada
-            self.next_button.config(state=tk.NORMAL)  # Habilitar o botão "Próxima"
+    def selecionar_op(self, *args):
+        if self.op_var.get():  # Se uma opção estiver selecionada
+            self.bt_proxima.config(state=tk.NORMAL)  # Habilitar o botão "Próxima"
 
-    def next_image(self):
-        response = self.option_var.get()
-        self.user_responses.append(response)
-        self.current_index += 1
-        self.show_image(self.current_index)
+    def px_imagem(self):
+        escolha_usuario = self.op_var.get()
+        self.resp_t.append(escolha_usuario)
+        self.imagem_atual += 1
+        self.mostrar_imagem(self.imagem_atual)
 
-    def show_results(self):
+    def msotrar_resultados(self):
         normal_count = 0
         protanopia_count = 0
         deuteranopia_count = 0
 
-        results = []
+        resul_ = []
 
-        for i, response in enumerate(self.user_responses):
-            expected = self.ishihara_plates[i]["expected"]
-            if response == expected.get("normal"):
+        for i, escolha_usuario in enumerate(self.resp_t):
+            expected = self.ishihara_placas[i]["expected"]
+            if escolha_usuario == expected.get("normal"):
                 normal_count += 1
-                results.append(f"Placa {i+1}: {response} (Normal)")
-            elif response == expected.get("protanopia"):
+                resul_.append(f"Placa {i+1}: {escolha_usuario} (Normal)")
+            elif escolha_usuario == expected.get("protanopia"):
                 protanopia_count += 1
-                results.append(f"Placa {i+1}: {response} (Protanopia)")
-            elif response == expected.get("deuteranopia"):
+                resul_.append(f"Placa {i+1}: {escolha_usuario} (Protanopia)")
+            elif escolha_usuario == expected.get("deuteranopia"):
                 deuteranopia_count += 1
-                results.append(f"Placa {i+1}: {response} (Deuteranopia)")
+                resul_.append(f"Placa {i+1}: {escolha_usuario} (Deuteranopia)")
             else:
-                results.append(f"Placa {i+1}: {response} (Resposta Inválida)")
+                resul_.append(f"Placa {i+1}: {escolha_usuario} (Resposta Inválida)")
 
         # gera o diagnóstico 
         if protanopia_count > deuteranopia_count and protanopia_count > normal_count:
-            diagnosis = "Protanopia"
+            diagnostico = "Protanopia"
         elif deuteranopia_count > protanopia_count and deuteranopia_count > normal_count:
-            diagnosis = "Deuteranopia"
+            diagnostico = "Deuteranopia"
         elif normal_count > protanopia_count and normal_count > deuteranopia_count:
-            diagnosis = "Visão Normal"
+            diagnostico = "Visão Normal"
         else:
-            diagnosis = "Indeterminado"
+            diagnostico = "Indeterminado"
 
-        results.append(f"\nDiagnóstico Final: {diagnosis}")
+        resul_.append(f"\nDiagnóstico Final: {diagnostico}")
 
-        self.results_label.config(text="\n".join(results))
+        self.tx_resultado.config(text="\n".join(resul_))
 
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = Ishihara(root)
-    root.mainloop()
+Ishihara()
