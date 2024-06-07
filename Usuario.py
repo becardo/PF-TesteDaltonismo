@@ -24,9 +24,9 @@ class Usuario():
         # Aqui estão todas as especificações gráficas de tela inicial do usuário:
         self.janela_usuario.title("Teste/Prognóstico para Daltonismo")
         self.janela_usuario.configure(background='#ADD8E6')
-        self.janela_usuario.geometry("800x500")
+        self.janela_usuario.geometry("800x600")
         self.janela_usuario.resizable(True, True)
-        self.janela_usuario.minsize(width=700, height=400)
+        self.janela_usuario.minsize(width=800, height=600)
 
         self.frame = Frame(self.janela_usuario, bd=6, bg='#F0F8FF',
                            highlightbackground='#87CEEB', highlightthickness=3)
