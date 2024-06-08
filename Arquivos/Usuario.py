@@ -1,5 +1,5 @@
 from tkinter import *
-from Ishihara import Ishihara
+from Arquivos import Ishihara
 
 janela_usuario = Tk()
 
