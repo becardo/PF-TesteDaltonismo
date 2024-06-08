@@ -9,6 +9,7 @@ import webbrowser
 class Documento(Usuario):
     def __init__(self,usuario):
         self.usuario = Usuario()
+        self.gerar_relatorio_pdf()
         
     def relatorio_usuario(self):
         webbrowser.open("ResultadoTeste.pdf")
