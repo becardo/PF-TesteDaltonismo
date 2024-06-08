@@ -1,9 +1,11 @@
 from tkinter import *
-#
+from Ishihara import Ishihara
+
 janela_usuario = Tk()
 
-class Usuario():
+class Usuario(Ishihara):
     def __init__(self):
+        super().__init__()
         self.janela_usuario = janela_usuario
         self.espec_tela()
 
@@ -105,8 +107,11 @@ class Usuario():
         self.label_aviso.place(relx= 0.01, rely= 0.8)
         
         # Botão para o inicio do teste:
-        self.bt_iniciar = Button(self.frame, text= "Iniciar Teste", bd= 4, bg= '#4682B4', fg= '#F5FFFA', activebackgroun= '#B0E0E6', activeforegroun= '#4682B4', font= ('arial',12))
+        self.bt_iniciar = Button(self.frame, text= "Iniciar Teste", bd= 4, bg= '#4682B4', fg= '#F5FFFA', activebackgroun= '#B0E0E6', activeforegroun= '#4682B4', font= ('arial',12), command= self.iniciar_teste)
         self.bt_iniciar.place(relx= 0.4, rely= 0.85, relwidth= 0.15, relheight= 0.1)
-
+    
+    def iniciar_teste(self):
+        self.janela_usuario.destroy()
+        Ishihara()
 
 Usuario()
