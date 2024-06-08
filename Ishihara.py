@@ -2,11 +2,14 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
+from Documento import Documento
+
 
 janela_ishihara = Tk()
 
-class Ishihara():
+class Ishihara(Documento):
     def __init__(self):
+        super().__init__()
         self.janela_ishihara = janela_ishihara
         self.espec_janela()
         
@@ -100,6 +103,9 @@ class Ishihara():
 
         self.tx_resultado = tk.Label(janela_ishihara, text="")
         self.tx_resultado.pack(pady=(10, 0))
+        
+        self.bt_gerar_pdf = tk.Button(self.scrollable_frame, text="Gerar Documento PDF", state= tk.DISABLED, command= self.gerar_pdf)
+        self.bt_gerar_pdf.pack(pady=(10, 0))
 
         # exibe a primeira imagem
         self.mostrar_imagem(self.imagem_atual)
@@ -107,7 +113,8 @@ class Ishihara():
     def mostrar_imagem(self, index):
         if index >= len(self.ishihara_placas):
             self.msotrar_resultados()
-            self.bt_proxima.config(state=tk.DISABLED)
+            self.bt_proxima.config(state= tk.DISABLED)
+            self.bt_gerar_pdf.config(state= tk.NORMAL)
             return
 
         plate = self.ishihara_placas[index]
@@ -173,6 +180,9 @@ class Ishihara():
         resul_.append(f"\nDiagnóstico Final: {diagnostico}")
 
         self.tx_resultado.config(text="\n".join(resul_))
+        
+    def gerar_pdf(self):
+        Documento()
 
 
 Ishihara()
