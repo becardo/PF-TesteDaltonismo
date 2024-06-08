@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
-from Arquivos import Documento
+import Documento
 
 
 janela_ishihara = Tk()

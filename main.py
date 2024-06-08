@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import simpledialog
-from usuario import Usuario
-from ishihara import Ishihara
-from teste import Teste
+import Usuario
+import Ishihara
+import Teste
 
 def main():
     # Inicialização da interface gráfica
