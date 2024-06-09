@@ -8,13 +8,13 @@ class Usuario(TesteDaltonismo):
         super().__init__()
         #self.janela_usuario = tk.Tk()
         self.iniciar_teste()
-        self.janela_teste.mainloop()  # Loop para manter a janela do usuario aberta.
+        self._janela_teste.mainloop()  # Loop para manter a janela do usuario aberta.
 
     def iniciar_teste(self):
         # Aqui estão todas as especificações gráficas de tela inicial do usuário:
        
 
-        self.frame = tk.Frame(self.janela_teste, bd=6, bg='#F0F8FF',
+        self.frame = tk.Frame(self._janela_teste, bd=6, bg='#F0F8FF',
                            highlightbackground='#87CEEB', highlightthickness=3)
         self.frame.place(relx=0.01, rely=0.01, relwidth=0.98, relheight=0.98)
 
@@ -138,7 +138,7 @@ class Usuario(TesteDaltonismo):
 
     def iniciar_bt(self):
         # Este método executa comando sys.executable, que abre a janela de execução do arquivo Ishihara.py.
-        self.janela_teste.destroy() # Faz com que a janela Usuario feche.
+        self._janela_teste.destroy() # Faz com que a janela Usuario feche.
         subprocess.Popen([sys.executable, "Ishihara.py"])
 
 # Inicializar a classe Usuario.
