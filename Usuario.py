@@ -26,50 +26,54 @@ class Usuario():
 
         # Variáveis StringVar
         # Essas informações serão obrigatórias. O usuário deve digitá-las para que tenha acesso ao teste.
-        self.nome_var = tk.StringVar()
-        self.sobrenome_var = tk.StringVar()
-        self.data_var = tk.StringVar()
-        self.rua_var = tk.StringVar()
-        self.numero_var = tk.StringVar()
-        self.bairro_var = tk.StringVar()
-        self.cidade_var = tk.StringVar()
+        self._nome_var = tk.StringVar()
+        self._sobrenome_var = tk.StringVar()
+        self._data_var = tk.StringVar()
+        self._tel_var = tk.StringVar()
+        self.__rua_var = tk.StringVar()
+        self.__numero_var = tk.StringVar()
+        self.__bairro_var = tk.StringVar()
+        self.__cidade_var = tk.StringVar()
+        self.__cep_var = tk.StringVar()
 
         # Monitoramento das variáveis
-        self.nome_var.trace("w", self.check_entradas)
-        self.sobrenome_var.trace("w", self.check_entradas)
-        self.data_var.trace("w", self.check_entradas)
-        self.rua_var.trace("w", self.check_entradas)
-        self.numero_var.trace("w", self.check_entradas)
-        self.bairro_var.trace("w", self.check_entradas)
-        self.cidade_var.trace("w", self.check_entradas)
+        self._nome_var.trace("w", self.check_entradas)
+        self._sobrenome_var.trace("w", self.check_entradas)
+        self._data_var.trace("w", self.check_entradas)
+        self._tel_var.trace("w", self.check_entradas)
+        self.__rua_var.trace("w", self.check_entradas)
+        self.__numero_var.trace("w", self.check_entradas)
+        self.__bairro_var.trace("w", self.check_entradas)
+        self.__cidade_var.trace("w", self.check_entradas)
+        self.__cep_var.trace("w", self.check_entradas)
 
         # Label e Entry para as informações:
         self.label_nome = tk.Label(self.frame, text="Nome:* ",
                                 bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_nome.place(relx=0.01, rely=0.15)
 
-        self.entry_nome = tk.Entry(self.frame, textvariable=self.nome_var, font=('arial', 12))
+        self.entry_nome = tk.Entry(self.frame, textvariable=self._nome_var, font=('arial', 12))
         self.entry_nome.place(relx=0.085, rely=0.14, relwidth=0.85)
 
         self.label_sobrenome = tk.Label(
             self.frame, text="Sobrenome:* ", bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_sobrenome.place(relx=0.01, rely=0.25)
 
-        self.entry_sobrenome = tk.Entry(self.frame, textvariable=self.sobrenome_var, font=('arial', 12))
+        self.entry_sobrenome = tk.Entry(self.frame, textvariable=self._sobrenome_var, font=('arial', 12))
         self.entry_sobrenome.place(relx=0.14, rely=0.24, relwidth=0.8)
 
         self.label_data = tk.Label(self.frame, text="Data de Nascimento:* ",
                                 bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_data.place(relx=0.01, rely=0.35)
 
-        self.entry_data = tk.Entry(self.frame, textvariable=self.data_var, font=('arial', 12))
+        self.entry_data = tk.Entry(self.frame, textvariable=self._data_var, font=('arial', 12))
         self.entry_data.place(relx=0.23, rely=0.34, relwidth=0.25)
 
         self.label_tel = tk.Label(self.frame, text="Telefone/Celular: ",
                                bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_tel.place(relx=0.48, rely=0.35)
 
-        self.entry_tel = tk.Entry(self.frame, font=('arial', 12))
+        self.entry_tel = tk.Entry(self.frame,textvariable=self._tel_var, font=('arial', 12))
         self.entry_tel.place(relx=0.65, rely=0.34, relwidth=0.28)
 
         self.label_endereco = tk.Label(
@@ -80,32 +84,32 @@ class Usuario():
                                bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_rua.place(relx=0.01, rely=0.55)
 
-        self.entry_rua = tk.Entry(self.frame, textvariable=self.rua_var, font=('arial', 12))
+        self.entry_rua = tk.Entry(self.frame, textvariable=self.__rua_var, font=('arial', 12))
         self.entry_rua.place(relx=0.065, rely=0.54, relwidth=0.7)
 
         self.label_numero = tk.Label(
             self.frame, text="N°:* ", bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_numero.place(relx=0.79, rely=0.55)
 
-        self.entry_numero = tk.Entry(self.frame, textvariable=self.numero_var, font=('arial', 12))
+        self.entry_numero = tk.Entry(self.frame, textvariable=self.__numero_var, font=('arial', 12))
         self.entry_numero.place(relx=0.85, rely=0.54, relwidth=0.1)
 
         self.label_bairro = tk.Label(self.frame, text="Bairro:* ",bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_bairro.place(relx=0.01, rely=0.65)
         
-        self.entry_bairro = tk.Entry(self.frame, textvariable=self.bairro_var, font=('arial', 12))
+        self.entry_bairro = tk.Entry(self.frame, textvariable=self.__bairro_var, font=('arial', 12))
         self.entry_bairro.place(relx=0.085, rely=0.64, relwidth=0.25)
 
         self.label_cidade = tk.Label(self.frame, text="Cidade:* ",bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_cidade.place(relx=0.35, rely=0.65)
         
-        self.entry_cidade = tk.Entry(self.frame, textvariable=self.cidade_var, font=('arial', 12))
+        self.entry_cidade = tk.Entry(self.frame, textvariable=self.__cidade_var, font=('arial', 12))
         self.entry_cidade.place(relx=0.45, rely=0.64, relwidth=0.25)
 
         self.label_cep = tk.Label(self.frame, text="CEP: ",bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_cep.place(relx=0.70, rely=0.65)
         
-        self.entry_cep = tk.Entry(self.frame, font=('arial', 12))
+        self.entry_cep = tk.Entry(self.frame, textvariable=self.__cep_var, font=('arial', 12))
         self.entry_cep.place(relx=0.78, rely=0.64, relwidth=0.17)
         
         self.label_aviso= tk.Label(self.frame, text="** Por favor, confira se os dados estão corretos antes de iniciar o teste.",bg='#F0F8FF', fg='#191970', font=('arial', 10))
@@ -119,13 +123,15 @@ class Usuario():
     def check_entradas(self, *args):
         # Verifica se os campos estão preenchidos.
         campos_obrigatorios = [
-            self.nome_var.get(), 
-            self.sobrenome_var.get(), 
-            self.data_var.get(),
-            self.rua_var.get(),
-            self.numero_var.get(),
-            self.bairro_var.get(),
-            self.cidade_var.get()
+            self._nome_var.get(), 
+            self._sobrenome_var.get(), 
+            self._data_var.get(),
+            self._tel_var.get(),
+            self.__rua_var.get(),
+            self.__numero_var.get(),
+            self.__bairro_var.get(),
+            self.__cidade_var.get(),
+            self.__cep_var.get()
         ]
         if all(campos_obrigatorios):
             self.bt_iniciar.config(state=tk.NORMAL)
