@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 from TesteDaltonismo import TesteDaltonismo
+from Documento import Documento
 
 class Ishihara(TesteDaltonismo):
     def __init__(self):
