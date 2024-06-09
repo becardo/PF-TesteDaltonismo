@@ -1,22 +1,21 @@
 import tkinter as tk
 import subprocess
 import sys
+from Ishihara import Ishihara
+from TesteDaltonismo import TesteDaltonismo
 
-class Usuario():
+class Usuario(TesteDaltonismo):
     def __init__(self):
-        self.janela_usuario = tk.Tk()
-        self.espec_tela()
-        self.janela_usuario.mainloop()  # Loop para manter a janela do usuario aberta.
+        super().__init__()
+        #self.janela_usuario = tk.Tk()
+        self.iniciar_teste()
+        self.janela_teste.mainloop()  # Loop para manter a janela do usuario aberta.
 
-    def espec_tela(self):
+    def iniciar_teste(self):
         # Aqui estão todas as especificações gráficas de tela inicial do usuário:
-        self.janela_usuario.title("Teste/Prognóstico para Daltonismo")
-        self.janela_usuario.configure(background='#ADD8E6')
-        self.janela_usuario.geometry("800x600")
-        self.janela_usuario.resizable(True, True)
-        self.janela_usuario.minsize(width=800, height=600)
+       
 
-        self.frame = tk.Frame(self.janela_usuario, bd=6, bg='#F0F8FF',
+        self.frame = tk.Frame(self.janela_teste, bd=6, bg='#F0F8FF',
                            highlightbackground='#87CEEB', highlightthickness=3)
         self.frame.place(relx=0.01, rely=0.01, relwidth=0.98, relheight=0.98)
 
@@ -116,7 +115,7 @@ class Usuario():
         self.label_aviso.place(relx= 0.01, rely= 0.8)
         
         # Botão para o inicio do teste:
-        self.bt_iniciar = tk.Button(self.frame, text="Iniciar Teste", bd=4, bg='#4682B4', fg='#F5FFFA', activebackground='#B0E0E6', activeforeground='#4682B4', font=('arial', 12), command=self.iniciar_teste)
+        self.bt_iniciar = tk.Button(self.frame, text="Iniciar Teste", bd=4, bg='#4682B4', fg='#F5FFFA', activebackground='#B0E0E6', activeforeground='#4682B4', font=('arial', 12), command=self.iniciar_bt)
         self.bt_iniciar.place(relx=0.4, rely=0.85, relwidth=0.15, relheight=0.1)
         self.bt_iniciar.config(state=tk.DISABLED) # Desabilitar o botão inicialmente.
     
@@ -138,9 +137,9 @@ class Usuario():
         else:
             self.bt_iniciar.config(state=tk.DISABLED)
 
-    def iniciar_teste(self):
+    def iniciar_bt(self):
         # Este método executa comando sys.executable, que abre a janela de execução do arquivo Ishihara.py.
-        # self.janela_usuario.destroy() # Faz com que a janela Usuario feche.
+        self.janela_teste.destroy() # Faz com que a janela Usuario feche.
         subprocess.Popen([sys.executable, "Ishihara.py"])
 
 # Inicializar a classe Usuario.
