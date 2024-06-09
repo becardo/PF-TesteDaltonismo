@@ -1,37 +1,25 @@
 import tkinter as tk
-from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
-#from Documento import Documento
+from TesteDaltonismo import TesteDaltonismo
 
-
-_janela_ishihara = Tk() # Criando a variavel para inicializar a janela Ishihara.
-
-class Ishihara():
+class Ishihara(TesteDaltonismo):
     def __init__(self):
         super().__init__()
-        self._janela_ishihara = _janela_ishihara
-        self._teste_ishi()
-        
-        _janela_ishihara.mainloop()
-        
-    def _teste_ishi(self):
-        # Neste método é realizado toda a configuração da janela, das imagens, gabaritos e tratamento
-        # das respostas do usuário. 
-        
-        self._janela_ishihara.title("Teste de Ishihara")
-        self._janela_ishihara.geometry("800x600")
-        self._janela_ishihara.configure(background= '#F0F8FF')
-        self._canvas = tk.Canvas(_janela_ishihara, background= '#F0F8FF') # Criação de uma wigdget Canvas dentro da janela Ishihara, para colocar as imagens.
-        self._scrollbar = tk.Scrollbar(_janela_ishihara, orient="vertical", command=self._canvas.yview) # Criação da barra de rolagem.
-        self._scrollable_frame = ttk.Frame(self._canvas, style= "TFrame")
-        
-        # Apenas para mudar a cor do fundo do Canvas.
-        self._style = ttk.Style()
-        self._style.configure("TFrame", background= '#F0F8FF')
+        self._ishihara_placas = self._carregar_placas()
+        self._resp_t = []
+        self._imagem_atual = 0
+        self.iniciar_teste()
+        self._janela_teste.mainloop()
 
-        # Na estrutura abaixo, é associado um evento de configuração á scrollable_frame para que a barra de rolagem acompanhe
-        # o redimencionamento do Canvas
+    def iniciar_teste(self):
+        self._canvas = tk.Canvas(self._janela_teste, background='#F0F8FF')
+        self._scrollbar = tk.Scrollbar(self._janela_teste, orient="vertical", command=self._canvas.yview)
+        self._scrollable_frame = ttk.Frame(self._canvas, style="TFrame")
+
+        self._style = ttk.Style()
+        self._style.configure("TFrame", background='#F0F8FF')
+
         self._scrollable_frame.bind(
             "<Configure>",
             lambda e: self._canvas.configure(
@@ -39,17 +27,37 @@ class Ishihara():
             )
         )
 
-        # Cria uma janela dentro do Canvas, e configura ele para usar a barra de rolagem vetical. Dessa forma, a rolagem acompanha a 
-        # visualização do Canvas.
         self._canvas.create_window((0, 0), window=self._scrollable_frame, anchor="nw")
-        self._canvas.configure(background= '#F0F8FF', yscrollcommand=self._scrollbar.set)
+        self._canvas.configure(background='#F0F8FF', yscrollcommand=self._scrollbar.set)
         
-        # Posicionamento janela Canvas.
-        self._canvas.pack(side="left", fill="both", expand=True,padx= 150)
+        self._canvas.pack(side="left", fill="both", expand=True, padx=150)
         self._scrollbar.pack(side="right", fill="y")
 
-        # lista com as placas de Ishihara, opções e respostas esperadas para cada caso 
-        self._ishihara_placas = [
+        self._tx_placa = tk.Label(self._scrollable_frame, text="Placa 1")
+        self._tx_placa.pack(pady=(10, 0))
+
+        self._tx_imagem = tk.Label(self._scrollable_frame)
+        self._tx_imagem.pack(pady=(10, 0))
+
+        self._op_var = tk.StringVar()
+        self._op_var.trace('w', self._selecionar_op)
+        
+        self._op_menu = ttk.Combobox(self._scrollable_frame, textvariable=self._op_var, state="readonly")
+        self._op_menu.pack(pady=(10, 0))
+
+        self._bt_proxima = tk.Button(self._scrollable_frame, text="Próxima", command=self._px_imagem, state=tk.DISABLED)
+        self._bt_proxima.pack(pady=(10, 0))
+
+        self._tx_resultado = tk.Label(self._janela_teste, text="")
+        self._tx_resultado.pack(pady=(10, 0))
+        
+        self._bt_gerar_pdf = tk.Button(self._scrollable_frame, text="Gerar Documento PDF", state=tk.DISABLED)
+        self._bt_gerar_pdf.pack(pady=(10, 0))
+
+        self._mostrar_imagem(self._imagem_atual)
+
+    def _carregar_placas(self):
+        return [
             {"image": "ishihara/Ishihara01.png", "options": ["1", "2", "12"], "expected": {"normal": "12", "protanopia": "1", "deuteranopia": "2"}},
             {"image": "ishihara/Ishihara02.png", "options": ["3", "6", "8"], "expected": {"normal": "8", "protanopia": "3"}},
             {"image": "ishihara/Ishihara03.png", "options": ["3", "5", "6"], "expected": {"normal": "6", "protanopia": "5"}},
@@ -90,63 +98,31 @@ class Ishihara():
             {"image": "ishihara/Ishihara38.png", "options": ["uma linha laranja", "uma linha"], "expected": {"normal": "uma linha laranja", "protanopia": "uma linha", "deuteranopia": "uma linha"}},
         ]
 
-        self._resp_t = []
-        self._imagem_atual = 0
-
-        # criando os widgets
-        self._tx_placa = tk.Label(self._scrollable_frame, text="Placa 1")
-        self._tx_placa.pack(pady=(10, 0))
-
-        self._tx_imagem = tk.Label(self._scrollable_frame)
-        self._tx_imagem.pack(pady=(10, 0))
-
-        self._op_var = tk.StringVar()
-        self._op_var.trace('w', self._selecionar_op)
-        
-        self._op_menu = ttk.Combobox(self._scrollable_frame, textvariable=self._op_var, state="readonly")
-        self._op_menu.pack(pady=(10, 0))
-
-        self._bt_proxima = tk.Button(self._scrollable_frame, text="Próxima", command=self._px_imagem, state=tk.DISABLED)
-        self._bt_proxima.pack(pady=(10, 0))
-
-        self._tx_resultado = tk.Label(_janela_ishihara, text="")
-        self._tx_resultado.pack(pady=(10, 0))
-        
-        self._bt_gerar_pdf = tk.Button(self._scrollable_frame, text="Gerar Documento PDF", state= tk.DISABLED)
-        self._bt_gerar_pdf.pack(pady=(10, 0))
-
-        # Exibe a primeira imagem.
-        self._mostrar_imagem(self._imagem_atual)
-
     def _mostrar_imagem(self, index):
         if index >= len(self._ishihara_placas):
             self._mostrar_resultados()
-            self._bt_proxima.config(state= tk.DISABLED)
-            self._bt_gerar_pdf.config(state= tk.NORMAL)
+            self._bt_proxima.config(state=tk.DISABLED)
+            self._bt_gerar_pdf.config(state=tk.NORMAL)
             return
 
         plate = self._ishihara_placas[index]
 
-        # Carrega a imagem.
         image = Image.open(plate["image"])
-        image = image.resize((450, 450), Image.Resampling.LANCZOS)  # tamanho padrão a imagem para tamanho da janela -50
+        image = image.resize((450, 450), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(image)
 
-        # Atualiza o rótulo da imagem.
         self._tx_imagem.config(image=photo)
-        self._tx_imagem.image = photo  # manetm uma referência da imagem pra não dar erro
+        self._tx_imagem.image = photo
 
-        # Atualiza o rótulo da placa.
         self._tx_placa.config(text=f"Placa {index + 1}")
 
-        # Atualiza as opções da caixa de seleção.
         self._op_menu['values'] = plate["options"]
-        self._op_var.set("")  # Reseta a seleção.
+        self._op_var.set("")
         self._bt_proxima.config(state=tk.DISABLED)
         
     def _selecionar_op(self, *args):
-        if self._op_var.get():  # Se uma opção estiver selecionada
-            self._bt_proxima.config(state=tk.NORMAL)  # Habilitar o botão "Próxima"
+        if self._op_var.get():
+            self._bt_proxima.config(state=tk.NORMAL)
 
     def _px_imagem(self):
         escolha_usuario = self._op_var.get()
@@ -175,7 +151,6 @@ class Ishihara():
             else:
                 resul_.append(f"Placa {i+1}: {escolha_usuario} (Resposta Inválida)")
 
-        # gera o diagnóstico 
         if protanopia_count > deuteranopia_count and protanopia_count > normal_count:
             diagnostico = "Protanopia"
         elif deuteranopia_count > protanopia_count and deuteranopia_count > normal_count:
@@ -188,8 +163,6 @@ class Ishihara():
         resul_.append(f"\nDiagnóstico Final: {diagnostico}")
 
         self._tx_resultado.config(text="\n".join(resul_))
-        
-    #def gerar_pdf(self):
-      # Documento.gerar_relatorio_pdf(self.resp_t, self.ishihara_placas)
+
 
 Ishihara()
