@@ -1,7 +1,6 @@
 import tkinter as tk
 import subprocess
 import sys
-from Ishihara import Ishihara
 from TesteDaltonismo import TesteDaltonismo
 
 class Usuario(TesteDaltonismo):
