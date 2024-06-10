@@ -1,20 +1,24 @@
 import tkinter as tk
 import subprocess
 import sys
-from TesteDaltonismo import TesteDaltonismo
+#from TesteDaltonismo import TesteDaltonismo
+#from Ishihara import Ishihara
 
-class Usuario(TesteDaltonismo):
+class Usuario():
     def __init__(self):
         super().__init__()
-        #self.janela_usuario = tk.Tk()
+        self.janela_teste = tk.Tk()
+        #self.janela_ishihara = Ishihara()
         self.iniciar_teste()
-        self._janela_teste.mainloop()  # Loop para manter a janela do usuario aberta.
+        self.janela_teste.mainloop()  # Loop para manter a janela do usuario aberta.
 
     def iniciar_teste(self):
         # Aqui estão todas as especificações gráficas de tela inicial do usuário:
-       
+        self.janela_teste.title("Teste de Daltonismo")
+        self.janela_teste.geometry("800x600")
+        self.janela_teste.configure(background= '#F0F8FF')
 
-        self.frame = tk.Frame(self._janela_teste, bd=6, bg='#F0F8FF',
+        self.frame = tk.Frame(self.janela_teste, bd=6, bg='#F0F8FF',
                            highlightbackground='#87CEEB', highlightthickness=3)
         self.frame.place(relx=0.01, rely=0.01, relwidth=0.98, relheight=0.98)
 
@@ -114,7 +118,7 @@ class Usuario(TesteDaltonismo):
         self.label_aviso.place(relx= 0.01, rely= 0.8)
         
         # Botão para o inicio do teste:
-        self.bt_iniciar = tk.Button(self.frame, text="Iniciar Teste", bd=4, bg='#4682B4', fg='#F5FFFA', activebackground='#B0E0E6', activeforeground='#4682B4', font=('arial', 12), command=self.iniciar_bt)
+        self.bt_iniciar = tk.Button(self.frame, text="Iniciar Teste", bd=4, bg='#4682B4', fg='#F5FFFA', activebackground='#B0E0E6', activeforeground='#4682B4', font=('arial', 12), command= self.iniciar_bt)
         self.bt_iniciar.place(relx=0.4, rely=0.85, relwidth=0.15, relheight=0.1)
         self.bt_iniciar.config(state=tk.DISABLED) # Desabilitar o botão inicialmente.
     
@@ -138,8 +142,9 @@ class Usuario(TesteDaltonismo):
 
     def iniciar_bt(self):
         # Este método executa comando sys.executable, que abre a janela de execução do arquivo Ishihara.py.
-        self._janela_teste.destroy() # Faz com que a janela Usuario feche.
-        subprocess.Popen([sys.executable, "Ishihara.py"])
+        #self._janela_teste.destroy() # Faz com que a janela Usuario feche.
+        subprocess.Popen([sys.executable, 'Ishihara.py'])
+        
 
 # Inicializar a classe Usuario.
 Usuario()
