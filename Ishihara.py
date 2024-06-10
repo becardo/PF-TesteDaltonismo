@@ -1,63 +1,68 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-from TesteDaltonismo import TesteDaltonismo
-from Documento import Documento
+#from TesteDaltonismo import TesteDaltonismo
+#from Documento import Documento
 
-class Ishihara(TesteDaltonismo):
+class Ishihara():
     def __init__(self):
-        super().__init__()
-        self._ishihara_placas = self._carregar_placas()
-        self._resp_t = []
-        self._imagem_atual = 0
+        #super().__init__()
+        self.janela_teste = tk.Tk()
+        self.ishihara_placas = self.carregar_placas()
+        self.resp_t = []
+        self.imagem_atual = 0
         self.iniciar_teste()
-        self._janela_teste.mainloop()
+        self.janela_teste.mainloop()
 
     def iniciar_teste(self):
-        self._canvas = tk.Canvas(self._janela_teste, background='#F0F8FF')
-        self._scrollbar = tk.Scrollbar(self._janela_teste, orient="vertical", command=self._canvas.yview)
-        self._scrollable_frame = ttk.Frame(self._canvas, style="TFrame")
+        self.janela_teste.title("Teste de Daltonismo")
+        self.janela_teste.geometry("800x600")
+        self.janela_teste.configure(background= '#F0F8FF')
+        
+        self.canvas = tk.Canvas(self.janela_teste, background='#F0F8FF')
+        self.scrollbar = tk.Scrollbar(self.janela_teste, orient="vertical", command=self.canvas.yview)
+        self.scrollable_frame = ttk.Frame(self.canvas, style="TFrame")
 
-        self._style = ttk.Style()
-        self._style.configure("TFrame", background='#F0F8FF')
+        self.style = ttk.Style()
+        self.style.configure("TFrame", background='#F0F8FF')
 
-        self._scrollable_frame.bind(
+        self.scrollable_frame.bind(
             "<Configure>",
-            lambda e: self._canvas.configure(
-                scrollregion=self._canvas.bbox("all")
+            lambda e: self.canvas.configure(
+                scrollregion=self.canvas.bbox("all")
             )
         )
 
-        self._canvas.create_window((0, 0), window=self._scrollable_frame, anchor="nw")
-        self._canvas.configure(background='#F0F8FF', yscrollcommand=self._scrollbar.set)
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.configure(background='#F0F8FF', yscrollcommand=self.scrollbar.set)
         
-        self._canvas.pack(side="left", fill="both", expand=True, padx=150)
-        self._scrollbar.pack(side="right", fill="y")
+        self.canvas.pack(side="left", fill="both", expand=True, padx=150)
+        self.scrollbar.pack(side="right", fill="y")
 
-        self._tx_placa = tk.Label(self._scrollable_frame, text="Placa 1")
-        self._tx_placa.pack(pady=(10, 0))
+        self.tx_placa = tk.Label(self.scrollable_frame, text="Placa 1")
+        self.tx_placa.pack(pady=(10, 0))
 
-        self._tx_imagem = tk.Label(self._scrollable_frame)
-        self._tx_imagem.pack(pady=(10, 0))
+        self.tx_imagem = tk.Label(self.scrollable_frame)
+        self.tx_imagem.pack(pady=(10, 0))
 
-        self._op_var = tk.StringVar()
-        self._op_var.trace('w', self._selecionar_op)
+        self.op_var = tk.StringVar()
+        self.op_var.trace('w', self.selecionar_op)
         
-        self._op_menu = ttk.Combobox(self._scrollable_frame, textvariable=self._op_var, state="readonly")
-        self._op_menu.pack(pady=(10, 0))
+        self.op_menu = ttk.Combobox(self.scrollable_frame, textvariable=self.op_var, state="readonly")
+        self.op_menu.pack(pady=(10, 0))
 
-        self._bt_proxima = tk.Button(self._scrollable_frame, text="Próxima", command=self._px_imagem, state=tk.DISABLED)
-        self._bt_proxima.pack(pady=(10, 0))
+        self.bt_proxima = tk.Button(self.scrollable_frame, text="Próxima", command=self.px_imagem, state=tk.DISABLED)
+        self.bt_proxima.pack(pady=(10, 0))
 
-        self._tx_resultado = tk.Label(self._janela_teste, text="")
-        self._tx_resultado.pack(pady=(10, 0))
+        self.tx_resultado = tk.Label(self.janela_teste, text="")
+        self.tx_resultado.pack(pady=(10, 0))
         
-        self._bt_gerar_pdf = tk.Button(self._scrollable_frame, text="Gerar Documento PDF", state=tk.DISABLED)
-        self._bt_gerar_pdf.pack(pady=(10, 0))
+        self.bt_gerar_pdf = tk.Button(self.scrollable_frame, text="Gerar Documento PDF", state=tk.DISABLED)
+        self.bt_gerar_pdf.pack(pady=(10, 0))
 
-        self._mostrar_imagem(self._imagem_atual)
+        self.mostrar_imagem(self.imagem_atual)
 
-    def _carregar_placas(self):
+    def carregar_placas(self):
         return [
             {"image": "ishihara/Ishihara01.png", "options": ["1", "2", "12"], "expected": {"normal": "12", "protanopia": "1", "deuteranopia": "2"}},
             {"image": "ishihara/Ishihara02.png", "options": ["3", "6", "8"], "expected": {"normal": "8", "protanopia": "3"}},
@@ -99,39 +104,39 @@ class Ishihara(TesteDaltonismo):
             {"image": "ishihara/Ishihara38.png", "options": ["uma linha laranja", "uma linha"], "expected": {"normal": "uma linha laranja", "protanopia": "uma linha", "deuteranopia": "uma linha"}},
         ]
 
-    def _mostrar_imagem(self, index):
-        if index >= len(self._ishihara_placas):
-            self._mostrar_resultados()
-            self._bt_proxima.config(state=tk.DISABLED)
-            self._bt_gerar_pdf.config(state=tk.NORMAL)
+    def mostrar_imagem(self, index):
+        if index >= len(self.ishihara_placas):
+            self.mostrar_resultados()
+            self.bt_proxima.config(state=tk.DISABLED)
+            self.bt_gerar_pdf.config(state=tk.NORMAL)
             return
 
-        plate = self._ishihara_placas[index]
+        plate = self.ishihara_placas[index]
 
         image = Image.open(plate["image"])
         image = image.resize((450, 450), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(image)
 
-        self._tx_imagem.config(image=photo)
-        self._tx_imagem.image = photo
+        self.tx_imagem.config(image=photo)
+        self.tx_imagem.image = photo
 
-        self._tx_placa.config(text=f"Placa {index + 1}")
+        self.tx_placa.config(text=f"Placa {index + 1}")
 
-        self._op_menu['values'] = plate["options"]
-        self._op_var.set("")
-        self._bt_proxima.config(state=tk.DISABLED)
+        self.op_menu['values'] = plate["options"]
+        self.op_var.set("")
+        self.bt_proxima.config(state=tk.DISABLED)
         
-    def _selecionar_op(self, *args):
-        if self._op_var.get():
-            self._bt_proxima.config(state=tk.NORMAL)
+    def selecionar_op(self, *args):
+        if self.op_var.get():
+            self.bt_proxima.config(state=tk.NORMAL)
+            
+    def px_imagem(self):
+        escolha_usuario = self.op_var.get()
+        self.resp_t.append(escolha_usuario)
+        self.imagem_atual += 1
+        self.mostrar_imagem(self.imagem_atual)
 
-    def _px_imagem(self):
-        escolha_usuario = self._op_var.get()
-        self._resp_t.append(escolha_usuario)
-        self._imagem_atual += 1
-        self._mostrar_imagem(self._imagem_atual)
-
-    def _mostrar_resultados(self):
+    def mostrar_resultados(self):
         normal_count = 0
         protanopia_count = 0
         deuteranopia_count = 0
@@ -163,7 +168,7 @@ class Ishihara(TesteDaltonismo):
 
         resul_.append(f"\nDiagnóstico Final: {diagnostico}")
 
-        self._tx_resultado.config(text="\n".join(resul_))
+        self.tx_resultado.config(text="\n".join(resul_))
 
 
 Ishihara()
