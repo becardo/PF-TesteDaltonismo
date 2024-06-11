@@ -1,19 +1,18 @@
 import tkinter as tk
 import subprocess
 import sys
-#from TesteDaltonismo import TesteDaltonismo
-#from Ishihara import Ishihara
+from InterfaceDaltonismo import TesteDaltonismo
 
-class Usuario():
+class Usuario(TesteDaltonismo):
     def __init__(self):
-        super().__init__()
         self.janela_teste = tk.Tk()
-        #self.janela_ishihara = Ishihara()
         self.iniciar_teste()
-        self.janela_teste.mainloop()  # Loop para manter a janela do usuario aberta.
+        self.janela_teste.mainloop() 
 
-    def iniciar_teste(self):
-        # Aqui estão todas as especificações gráficas de tela inicial do usuário:
+    def iniciar_teste(self)-> None:
+        '''
+        Aqui estão todas as especificações gráficas de tela inicial do usuário:
+        '''
         self.janela_teste.title("Teste de Daltonismo")
         self.janela_teste.geometry("800x600")
         self.janela_teste.configure(background= '#F0F8FF')
@@ -26,8 +25,10 @@ class Usuario():
             self.frame, text="Ficha do Paciente", bg='#F0F8FF', fg='#191970', font=('arial', 18))
         self.label_cabecalho.place(relx=0.33, rely=0.01)
 
-        # Variáveis StringVar
-        # Essas informações serão obrigatórias. O usuário deve digitá-las para que tenha acesso ao teste.
+        '''
+        Variáveis StringVar
+        Essas informações serão obrigatórias. O usuário deve digitá-las para que tenha acesso ao teste.
+        '''
         self._nome_var = tk.StringVar()
         self._sobrenome_var = tk.StringVar()
         self._data_var = tk.StringVar()
@@ -38,7 +39,9 @@ class Usuario():
         self.__cidade_var = tk.StringVar()
         self.__cep_var = tk.StringVar()
 
-        # Monitoramento das variáveis
+        '''
+        Monitoramento das variáveis:
+        '''
         self._nome_var.trace("w", self.check_entradas)
         self._sobrenome_var.trace("w", self.check_entradas)
         self._data_var.trace("w", self.check_entradas)
@@ -49,7 +52,9 @@ class Usuario():
         self.__cidade_var.trace("w", self.check_entradas)
         self.__cep_var.trace("w", self.check_entradas)
 
-        # Label e Entry para as informações:
+        '''
+        Label e Entry para as informações:
+        '''
         self.label_nome = tk.Label(self.frame, text="Nome:* ",
                                 bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_nome.place(relx=0.01, rely=0.15)
@@ -117,13 +122,20 @@ class Usuario():
         self.label_aviso= tk.Label(self.frame, text="** Por favor, confira se os dados estão corretos antes de iniciar o teste.",bg='#F0F8FF', fg='#191970', font=('arial', 10))
         self.label_aviso.place(relx= 0.01, rely= 0.8)
         
-        # Botão para o inicio do teste:
+        '''
+        Botão para o inicio do teste:
+        '''
         self.bt_iniciar = tk.Button(self.frame, text="Iniciar Teste", bd=4, bg='#4682B4', fg='#F5FFFA', activebackground='#B0E0E6', activeforeground='#4682B4', font=('arial', 12), command= self.iniciar_bt)
         self.bt_iniciar.place(relx=0.4, rely=0.85, relwidth=0.15, relheight=0.1)
-        self.bt_iniciar.config(state=tk.DISABLED) # Desabilitar o botão inicialmente.
+        '''
+        Desabilitar o botão inicialmente.
+        '''
+        self.bt_iniciar.config(state=tk.DISABLED) 
     
     def check_entradas(self, *args):
-        # Verifica se os campos estão preenchidos.
+        '''
+         Verifica se os campos estão preenchidos.
+        '''
         campos_obrigatorios = [
             self._nome_var.get(), 
             self._sobrenome_var.get(), 
@@ -140,11 +152,15 @@ class Usuario():
         else:
             self.bt_iniciar.config(state=tk.DISABLED)
 
-    def iniciar_bt(self):
-        # Este método executa comando sys.executable, que abre a janela de execução do arquivo Ishihara.py.
-        #self._janela_teste.destroy() # Faz com que a janela Usuario feche.
-        subprocess.Popen([sys.executable, 'Ishihara.py'])
+    def iniciar_bt(self)-> None:
+        '''
+        Este método executa comando sys.executable, que abre a janela de execução do arquivo Ishihara.py.
+        '''
+        #self.janela_teste.destroy()
+        subprocess.Popen([sys.executable, 'ishihara.py'])
         
-
-# Inicializar a classe Usuario.
+'''
+Inicializa a classe Usuario.
+'''
 Usuario()
+
