@@ -1,7 +1,7 @@
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import webbrowser 
-#from Usuario import Usuario
+from usuario import Usuario
 from tkinter import Tk
 #from Ishihara import Ishihara
 
