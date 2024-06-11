@@ -1,12 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-#from TesteDaltonismo import TesteDaltonismo
-#from Documento import Documento
+from InterfaceDaltonismo import TesteDaltonismo
+#from documento import Documento
 
-class Ishihara():
+class Ishihara(TesteDaltonismo):
     def __init__(self):
-        #super().__init__()
         self.janela_teste = tk.Tk()
         self.ishihara_placas = self.carregar_placas()
         self.resp_t = []
@@ -15,6 +14,9 @@ class Ishihara():
         self.janela_teste.mainloop()
 
     def iniciar_teste(self):
+        '''
+        Especificaçãoes da janela 
+        '''
         self.janela_teste.title("Teste de Daltonismo")
         self.janela_teste.geometry("800x600")
         self.janela_teste.configure(background= '#F0F8FF')
@@ -26,6 +28,10 @@ class Ishihara():
         self.style = ttk.Style()
         self.style.configure("TFrame", background='#F0F8FF')
 
+        '''        
+        Na estrutura abaixo, é associado um evento de configuração á scrollable_frame para que a barra de rolagem acompanhe
+        o redimencionamento do Canvas
+        '''
         self.scrollable_frame.bind(
             "<Configure>",
             lambda e: self.canvas.configure(
@@ -33,12 +39,22 @@ class Ishihara():
             )
         )
 
+        '''
+        Cria uma janela dentro do Canvas, e configura ele para usar a barra de rolagem vetical. Dessa forma, a rolagem acompanha a 
+        visualização do Canvas.
+        '''
         self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         self.canvas.configure(background='#F0F8FF', yscrollcommand=self.scrollbar.set)
         
+        '''
+        Posicionamento janela Canvas.
+        '''
         self.canvas.pack(side="left", fill="both", expand=True, padx=150)
         self.scrollbar.pack(side="right", fill="y")
 
+        '''
+        lista com as placas de Ishihara, opções e respostas esperadas para cada caso 
+        '''
         self.tx_placa = tk.Label(self.scrollable_frame, text="Placa 1")
         self.tx_placa.pack(pady=(10, 0))
 
@@ -113,21 +129,33 @@ class Ishihara():
 
         plate = self.ishihara_placas[index]
 
+        '''
+        Carrega a imagem.
+        '''
         image = Image.open(plate["image"])
         image = image.resize((450, 450), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(image)
 
+        '''
+        Atualiza o rótulo da imagem.
+        '''
         self.tx_imagem.config(image=photo)
         self.tx_imagem.image = photo
 
+        '''
+        Atualiza o rótulo da placa.
+        '''
         self.tx_placa.config(text=f"Placa {index + 1}")
 
+        '''
+        Atualiza as opções da caixa de seleção.
+        '''
         self.op_menu['values'] = plate["options"]
-        self.op_var.set("")
+        self.op_var.set("")# Reseta a seleção.
         self.bt_proxima.config(state=tk.DISABLED)
         
     def selecionar_op(self, *args):
-        if self.op_var.get():
+        if self.op_var.get(): 
             self.bt_proxima.config(state=tk.NORMAL)
             
     def px_imagem(self):
@@ -143,8 +171,8 @@ class Ishihara():
 
         resul_ = []
 
-        for i, escolha_usuario in enumerate(self._resp_t):
-            expected = self._ishihara_placas[i]["expected"]
+        for i, escolha_usuario in enumerate(self.resp_t):
+            expected = self.ishihara_placas[i]["expected"]
             if escolha_usuario == expected.get("normal"):
                 normal_count += 1
                 resul_.append(f"Placa {i+1}: {escolha_usuario} (Normal)")
