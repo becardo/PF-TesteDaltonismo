@@ -1,15 +1,29 @@
 import tkinter as tk
 import subprocess
 import sys
+from tkcalendar import Calendar, DateEntry
 from InterfaceDaltonismo import TesteDaltonismo
 
 class Usuario(TesteDaltonismo):
-    def __init__(self):
+    def __init__(self) -> None:
         self.janela_teste = tk.Tk()
         self.iniciar_teste()
         self.janela_teste.mainloop() 
 
-    def iniciar_teste(self)-> None:
+    def calendario(self):
+        self.calendario = Calendar(self.frame, fg="gray75", bg="blue", font=("Times",'9','bold'), locale='pt_br')
+        self.calendario.place(relx= 0.5, rely=0.1)
+        self.calData = tk.Button(self.frame, text="Inserir Data", command= self.print_cal)
+        self.calData.place(relx=0.6, rely=0.4, height=25, width=100)
+
+    def print_cal(self):
+        dataIni = self.calendario.get_date()
+        self.calendario.destroy()
+        self.entry_data.delete(0, END)
+        self.entry_data.insert(END, dataIni)
+        self.calData.destroy()
+        
+    def iniciar_teste(self) -> None:
         '''
         Aqui estão todas as especificações gráficas de tela inicial do usuário:
         '''
@@ -33,11 +47,8 @@ class Usuario(TesteDaltonismo):
         self._sobrenome_var = tk.StringVar()
         self._data_var = tk.StringVar()
         self._tel_var = tk.StringVar()
-        self.__rua_var = tk.StringVar()
-        self.__numero_var = tk.StringVar()
-        self.__bairro_var = tk.StringVar()
-        self.__cidade_var = tk.StringVar()
-        self.__cep_var = tk.StringVar()
+        self.__email_var = tk.StringVar()
+        self.__cpf_var = tk.StringVar()
 
         '''
         Monitoramento das variáveis:
@@ -46,11 +57,8 @@ class Usuario(TesteDaltonismo):
         self._sobrenome_var.trace("w", self.check_entradas)
         self._data_var.trace("w", self.check_entradas)
         self._tel_var.trace("w", self.check_entradas)
-        self.__rua_var.trace("w", self.check_entradas)
-        self.__numero_var.trace("w", self.check_entradas)
-        self.__bairro_var.trace("w", self.check_entradas)
-        self.__cidade_var.trace("w", self.check_entradas)
-        self.__cep_var.trace("w", self.check_entradas)
+        self.__email_var.trace("w", self.check_entradas)
+        self.__cpf_var.trace("w", self.check_entradas)
 
         '''
         Label e Entry para as informações:
@@ -60,68 +68,45 @@ class Usuario(TesteDaltonismo):
         self.label_nome.place(relx=0.01, rely=0.15)
 
         self.entry_nome = tk.Entry(self.frame, textvariable=self._nome_var, font=('arial', 12))
-        self.entry_nome.place(relx=0.085, rely=0.14, relwidth=0.85)
+        self.entry_nome.place(relx=0.085, rely=0.15, relwidth=0.85)
 
         self.label_sobrenome = tk.Label(
             self.frame, text="Sobrenome:* ", bg='#F0F8FF', fg='#191970', font=('arial', 12))
         self.label_sobrenome.place(relx=0.01, rely=0.25)
 
         self.entry_sobrenome = tk.Entry(self.frame, textvariable=self._sobrenome_var, font=('arial', 12))
-        self.entry_sobrenome.place(relx=0.14, rely=0.24, relwidth=0.8)
+        self.entry_sobrenome.place(relx=0.14, rely=0.25, relwidth=0.8)
 
-        self.label_data = tk.Label(self.frame, text="Data de Nascimento:* ",
-                                bg='#F0F8FF', fg='#191970', font=('arial', 12))
+        self.label_data = tk.Button(self.frame, text="Data de Nascimento:* ",
+                                bg='#F0F8FF', fg='#191970', font=('arial', 12), command= self.calendario)
         self.label_data.place(relx=0.01, rely=0.35)
 
-        self.entry_data = tk.Entry(self.frame, textvariable=self._data_var, font=('arial', 12))
-        self.entry_data.place(relx=0.23, rely=0.34, relwidth=0.25)
+        self.entry_data = tk.Entry(self.frame)
+        self.entry_data.place(relx=0.3, rely=0.35, relwidth=0.25)
 
-        self.label_tel = tk.Label(self.frame, text="Telefone/Celular: ",
+        self.label_cpf = tk.Label(self.frame, text="CPF:* ",
                                bg='#F0F8FF', fg='#191970', font=('arial', 12))
-        self.label_tel.place(relx=0.48, rely=0.35)
+        self.label_cpf.place(relx=0.58, rely=0.35)
 
-        self.entry_tel = tk.Entry(self.frame,textvariable=self._tel_var, font=('arial', 12))
-        self.entry_tel.place(relx=0.65, rely=0.34, relwidth=0.28)
+        self.entry_cpf = tk.Entry(self.frame,textvariable=self.__cpf_var, font=('arial', 12))
+        self.entry_cpf.place(relx=0.65, rely=0.35, relwidth=0.29)
 
-        self.label_endereco = tk.Label(
-            self.frame, text="Endereço: ", bg='#F0F8FF', fg='#191970', font=('arial', 12))
-        self.label_endereco.place(relx=0.01, rely=0.45)
-
-        self.label_rua = tk.Label(self.frame, text="Rua:* ",
+        self.label_email = tk.Label(self.frame, text="E-mail:* ",
                                bg='#F0F8FF', fg='#191970', font=('arial', 12))
-        self.label_rua.place(relx=0.01, rely=0.55)
+        self.label_email.place(relx=0.01, rely=0.45)
 
-        self.entry_rua = tk.Entry(self.frame, textvariable=self.__rua_var, font=('arial', 12))
-        self.entry_rua.place(relx=0.065, rely=0.54, relwidth=0.7)
+        self.entry_email = tk.Entry(self.frame, textvariable=self.__email_var, font=('arial', 12))
+        self.entry_email.place(relx=0.09, rely=0.45, relwidth=0.85)
 
-        self.label_numero = tk.Label(
-            self.frame, text="N°:* ", bg='#F0F8FF', fg='#191970', font=('arial', 12))
-        self.label_numero.place(relx=0.79, rely=0.55)
+        self.label_tel = tk.Label(self.frame, text="Telefone/Celular:* ",bg='#F0F8FF', fg='#191970', font=('arial', 12))
+        self.label_tel.place(relx=0.01, rely=0.55)
 
-        self.entry_numero = tk.Entry(self.frame, textvariable=self.__numero_var, font=('arial', 12))
-        self.entry_numero.place(relx=0.85, rely=0.54, relwidth=0.1)
+        self.entry_tel = tk.Entry(self.frame, textvariable=self._tel_var, font=('arial', 12))
+        self.entry_tel.place(relx=0.18, rely=0.55, relwidth=0.25)
 
-        self.label_bairro = tk.Label(self.frame, text="Bairro:* ",bg='#F0F8FF', fg='#191970', font=('arial', 12))
-        self.label_bairro.place(relx=0.01, rely=0.65)
-        
-        self.entry_bairro = tk.Entry(self.frame, textvariable=self.__bairro_var, font=('arial', 12))
-        self.entry_bairro.place(relx=0.085, rely=0.64, relwidth=0.25)
-
-        self.label_cidade = tk.Label(self.frame, text="Cidade:* ",bg='#F0F8FF', fg='#191970', font=('arial', 12))
-        self.label_cidade.place(relx=0.35, rely=0.65)
-        
-        self.entry_cidade = tk.Entry(self.frame, textvariable=self.__cidade_var, font=('arial', 12))
-        self.entry_cidade.place(relx=0.45, rely=0.64, relwidth=0.25)
-
-        self.label_cep = tk.Label(self.frame, text="CEP: ",bg='#F0F8FF', fg='#191970', font=('arial', 12))
-        self.label_cep.place(relx=0.70, rely=0.65)
-        
-        self.entry_cep = tk.Entry(self.frame, textvariable=self.__cep_var, font=('arial', 12))
-        self.entry_cep.place(relx=0.78, rely=0.64, relwidth=0.17)
-        
         self.label_aviso= tk.Label(self.frame, text="** Por favor, confira se os dados estão corretos antes de iniciar o teste.",bg='#F0F8FF', fg='#191970', font=('arial', 10))
         self.label_aviso.place(relx= 0.01, rely= 0.8)
-        
+
         '''
         Botão para o inicio do teste:
         '''
@@ -130,9 +115,9 @@ class Usuario(TesteDaltonismo):
         '''
         Desabilitar o botão inicialmente.
         '''
-        self.habilitar_botao('bt_iniciar', 'disabled') 
-    
-    def check_entradas(self, *args):
+        self.habilitar_botao('bt_iniciar','disabled') 
+
+    def check_entradas(self, *args:str) -> None:
         '''
          Verifica se os campos estão preenchidos.
         '''
@@ -141,24 +126,20 @@ class Usuario(TesteDaltonismo):
             self._sobrenome_var.get(), 
             self._data_var.get(),
             self._tel_var.get(),
-            self.__rua_var.get(),
-            self.__numero_var.get(),
-            self.__bairro_var.get(),
-            self.__cidade_var.get(),
-            self.__cep_var.get()
+            self.__email_var.get(),
+            self.__cpf_var.get()
         ]
         if all(campos_obrigatorios):
-            self.bt_iniciar.config(state=tk.NORMAL)
+            self.habilitar_botao('bt_iniciar','normal')
         else:
-            self.bt_iniciar.config(state=tk.DISABLED)
+            self.habilitar_botao('bt_iniciar','disabled')
 
     def iniciar_bt(self)-> None:
         '''
         Este método executa comando sys.executable, que abre a janela de execução do arquivo Ishihara.py.
         '''
-        #self.janela_teste.destroy()
         subprocess.Popen([sys.executable, 'ishihara.py'])
-        
+
 '''
 Inicializa a classe Usuario.
 '''
