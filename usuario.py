@@ -130,7 +130,7 @@ class Usuario(TesteDaltonismo):
         '''
         Desabilitar o botão inicialmente.
         '''
-        self.bt_iniciar.config(state=tk.DISABLED) 
+        self.habilitar_botao('bt_iniciar', 'disabled') 
     
     def check_entradas(self, *args):
         '''
