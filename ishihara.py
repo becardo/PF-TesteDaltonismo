@@ -123,8 +123,8 @@ class Ishihara(TesteDaltonismo):
     def mostrar_imagem(self, index):
         if index >= len(self.ishihara_placas):
             self.mostrar_resultados()
-            self.bt_proxima.config(state=tk.DISABLED)
-            self.bt_gerar_pdf.config(state=tk.NORMAL)
+            self.habilitar_botao('bt_proxima','disabled')
+            self.habilitar_botao('bt_gerar_pdf','normal')
             return
 
         plate = self.ishihara_placas[index]
