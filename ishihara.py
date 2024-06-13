@@ -1,26 +1,27 @@
 import tkinter as tk
 from tkinter import ttk
+from typing import Any, Dict, List, Union
 from PIL import Image, ImageTk
 from InterfaceDaltonismo import TesteDaltonismo
 #from documento import Documento
 
 class Ishihara(TesteDaltonismo):
-    def __init__(self):
+    def __init__(self) -> None:
         self.janela_teste = tk.Tk()
-        self.ishihara_placas = self.carregar_placas()
-        self.resp_t = []
+        self.ishihara_placas: List[Dict[str, Any]] = self.carregar_placas()
+        self.resp_t: List[str] = []
         self.imagem_atual = 0
         self.iniciar_teste()
         self.janela_teste.mainloop()
 
-    def iniciar_teste(self):
+    def iniciar_teste(self) -> None:
         '''
         Especificaçãoes da janela 
         '''
         self.janela_teste.title("Teste de Daltonismo")
         self.janela_teste.geometry("800x600")
         self.janela_teste.configure(background= '#F0F8FF')
-        
+
         self.canvas = tk.Canvas(self.janela_teste, background='#F0F8FF')
         self.scrollbar = tk.Scrollbar(self.janela_teste, orient="vertical", command=self.canvas.yview)
         self.scrollable_frame = ttk.Frame(self.canvas, style="TFrame")
@@ -45,7 +46,7 @@ class Ishihara(TesteDaltonismo):
         '''
         self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         self.canvas.configure(background='#F0F8FF', yscrollcommand=self.scrollbar.set)
-        
+
         '''
         Posicionamento janela Canvas.
         '''
@@ -63,7 +64,7 @@ class Ishihara(TesteDaltonismo):
 
         self.op_var = tk.StringVar()
         self.op_var.trace('w', self.selecionar_op)
-        
+
         self.op_menu = ttk.Combobox(self.scrollable_frame, textvariable=self.op_var, state="readonly")
         self.op_menu.pack(pady=(10, 0))
 
@@ -72,13 +73,13 @@ class Ishihara(TesteDaltonismo):
 
         self.tx_resultado = tk.Label(self.janela_teste, text="")
         self.tx_resultado.pack(pady=(10, 0))
-        
+
         self.bt_gerar_pdf = tk.Button(self.scrollable_frame, text="Gerar Documento PDF", state=tk.DISABLED)
         self.bt_gerar_pdf.pack(pady=(10, 0))
 
         self.mostrar_imagem(self.imagem_atual)
 
-    def carregar_placas(self):
+    def carregar_placas(self) -> List[Dict[str, Any]]:
         return [
             {"image": "ishihara/Ishihara01.png", "options": ["1", "2", "12"], "expected": {"normal": "12", "protanopia": "1", "deuteranopia": "2"}},
             {"image": "ishihara/Ishihara02.png", "options": ["3", "6", "8"], "expected": {"normal": "8", "protanopia": "3"}},
@@ -120,7 +121,7 @@ class Ishihara(TesteDaltonismo):
             {"image": "ishihara/Ishihara38.png", "options": ["uma linha laranja", "uma linha"], "expected": {"normal": "uma linha laranja", "protanopia": "uma linha", "deuteranopia": "uma linha"}},
         ]
 
-    def mostrar_imagem(self, index):
+    def mostrar_imagem(self, index: int) -> None:
         if index >= len(self.ishihara_placas):
             self.mostrar_resultados()
             self.habilitar_botao('bt_proxima','disabled')
@@ -140,7 +141,7 @@ class Ishihara(TesteDaltonismo):
         Atualiza o rótulo da imagem.
         '''
         self.tx_imagem.config(image=photo)
-        self.tx_imagem.image = photo
+        self.tx_imagem.image = photo 
 
         '''
         Atualiza o rótulo da placa.
@@ -153,18 +154,18 @@ class Ishihara(TesteDaltonismo):
         self.op_menu['values'] = plate["options"]
         self.op_var.set("")# Reseta a seleção.
         self.bt_proxima.config(state=tk.DISABLED)
-        
-    def selecionar_op(self, *args):
+
+    def selecionar_op(self, *args: Any) -> None:
         if self.op_var.get(): 
             self.bt_proxima.config(state=tk.NORMAL)
-            
-    def px_imagem(self):
+
+    def px_imagem(self) -> None:
         escolha_usuario = self.op_var.get()
         self.resp_t.append(escolha_usuario)
         self.imagem_atual += 1
         self.mostrar_imagem(self.imagem_atual)
 
-    def mostrar_resultados(self):
+    def mostrar_resultados(self) -> None:
         normal_count = 0
         protanopia_count = 0
         deuteranopia_count = 0
