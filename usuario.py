@@ -9,7 +9,37 @@ class Usuario(TesteDaltonismo):
         self.janela_teste = tk.Tk()
         self.iniciar_teste()
         self.janela_teste.mainloop() 
+        
+    def habilitar_botao(self, botao, estado):
+        """
+        Habilita ou desabilita um botão baseado no nome do botão e no estado desejado.
+        :param botao: Nome do botão a ser modificado ('bt_proxima' ou 'bt_gerar_pdf').
+        :param estado: Estado desejado ('normal' ou 'disabled').
+        """
+        if hasattr(self, botao):
+            getattr(self, botao).config(state=estado)
+        else:
+            raise ValueError(f"Botão desconhecido: {botao}")
 
+    def configurar_validacao(self, entry, tipo):
+        '''
+        Configura a validação para aceitar apenas caracteres numéricos ou letras.
+        '''
+        def validar_entrada(action, value_if_allowed):
+            if action == '1':  # Inserção
+                try:
+                    if tipo == 'numerico':
+                        int(value_if_allowed)
+                    elif tipo == 'letras':
+                        if not value_if_allowed.isalpha():
+                            raise ValueError
+                except ValueError:
+                    return False
+            return True
+
+        vcmd = (entry.register(validar_entrada), '%d', '%P')
+        entry.config(validate='key', validatecommand=vcmd)
+        
     def calendario(self):
         self.calendario = Calendar(self.frame, fg="gray75", bg="blue", font=("Times",'9','bold'), locale='pt_br')
         self.calendario.place(relx= 0.5, rely=0.1)
@@ -22,7 +52,7 @@ class Usuario(TesteDaltonismo):
         self.entry_data.delete(0, END)
         self.entry_data.insert(END, dataIni)
         self.calData.destroy()
-        
+
     def iniciar_teste(self) -> None:
         '''
         Aqui estão todas as especificações gráficas de tela inicial do usuário:
@@ -69,6 +99,7 @@ class Usuario(TesteDaltonismo):
 
         self.entry_nome = tk.Entry(self.frame, textvariable=self._nome_var, font=('arial', 12))
         self.entry_nome.place(relx=0.085, rely=0.15, relwidth=0.85)
+        self.configurar_validacao(self.entry_nome, 'letras')
 
         self.label_sobrenome = tk.Label(
             self.frame, text="Sobrenome:* ", bg='#F0F8FF', fg='#191970', font=('arial', 12))
@@ -76,6 +107,7 @@ class Usuario(TesteDaltonismo):
 
         self.entry_sobrenome = tk.Entry(self.frame, textvariable=self._sobrenome_var, font=('arial', 12))
         self.entry_sobrenome.place(relx=0.14, rely=0.25, relwidth=0.8)
+        self.configurar_validacao(self.entry_sobrenome, 'letras')
 
         self.label_data = tk.Button(self.frame, text="Data de Nascimento:* ",
                                 bg='#F0F8FF', fg='#191970', font=('arial', 12), command= self.calendario)
@@ -90,6 +122,7 @@ class Usuario(TesteDaltonismo):
 
         self.entry_cpf = tk.Entry(self.frame,textvariable=self.__cpf_var, font=('arial', 12))
         self.entry_cpf.place(relx=0.65, rely=0.35, relwidth=0.29)
+        self.configurar_validacao(self.entry_cpf, 'numerico')
 
         self.label_email = tk.Label(self.frame, text="E-mail:* ",
                                bg='#F0F8FF', fg='#191970', font=('arial', 12))
@@ -103,6 +136,7 @@ class Usuario(TesteDaltonismo):
 
         self.entry_tel = tk.Entry(self.frame, textvariable=self._tel_var, font=('arial', 12))
         self.entry_tel.place(relx=0.18, rely=0.55, relwidth=0.25)
+        self.configurar_validacao(self.entry_tel, 'numerico')
 
         self.label_aviso= tk.Label(self.frame, text="** Por favor, confira se os dados estão corretos antes de iniciar o teste.",bg='#F0F8FF', fg='#191970', font=('arial', 10))
         self.label_aviso.place(relx= 0.01, rely= 0.8)
@@ -144,4 +178,3 @@ class Usuario(TesteDaltonismo):
 Inicializa a classe Usuario.
 '''
 Usuario()
-
