@@ -3,6 +3,8 @@ from tkinter import ttk
 from typing import Any, Dict, List, Union
 from PIL import Image, ImageTk
 from InterfaceDaltonismo import TesteDaltonismo
+import subprocess
+import sys
 #from documento import Documento
 
 class Ishihara(TesteDaltonismo):
@@ -74,7 +76,7 @@ class Ishihara(TesteDaltonismo):
         self.tx_resultado = tk.Label(self.janela_teste, text="")
         self.tx_resultado.pack(pady=(10, 0))
 
-        self.bt_gerar_pdf = tk.Button(self.scrollable_frame, text="Gerar Documento PDF", state=tk.DISABLED)
+        self.bt_gerar_pdf = tk.Button(self.scrollable_frame, text="Gerar Documento PDF", command= self.gerar_pdf, state=tk.DISABLED)
         self.bt_gerar_pdf.pack(pady=(10, 0))
 
         self.mostrar_imagem(self.imagem_atual)
@@ -152,7 +154,7 @@ class Ishihara(TesteDaltonismo):
         Atualiza as opções da caixa de seleção.
         '''
         self.op_menu['values'] = plate["options"]
-        self.op_var.set("")# Reseta a seleção.
+        self.op_var.set("") # Reseta a seleção.
         self.bt_proxima.config(state=tk.DISABLED)
 
     def selecionar_op(self, *args: Any) -> None:
@@ -198,6 +200,12 @@ class Ishihara(TesteDaltonismo):
         resul_.append(f"\nDiagnóstico Final: {diagnostico}")
 
         self.tx_resultado.config(text="\n".join(resul_))
+
+    def gerar_pdf(self)-> None:
+        '''
+        Este método executa comando sys.executable, chama o arquivo documento.py para gerar o PDF com os resultados.
+        '''
+        subprocess.Popen([sys.executable, 'documento.py'])
 
 
 Ishihara()
