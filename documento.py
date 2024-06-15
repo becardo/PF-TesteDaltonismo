@@ -2,10 +2,10 @@ import pandas as pd
 import pdfkit
 import webbrowser
 from usuario import Usuario
-from tkinter import Tk
+from tkinter import tk
 from ishihara import Ishihara
 
-class Documento(Usuario):
+class Documento(Usuario, Ishihara):
     def __init__(self, usuario: list, respostas: list, placas: list) -> None:
         self.usuario = usuario
         self.respostas = respostas
@@ -16,16 +16,13 @@ class Documento(Usuario):
         webbrowser.open("ResultadoTeste.pdf")
 
     def gerar_relatorio_pdf(self) -> None:
-        # Obtenção dos valores do usuário
+        
         self.nome = self.usuario[0].nome_var.get()
         self.sobrenome = self.usuario[0].sobrenome_var.get()
         self.data_nasc = self.usuario[0].data_var.get()
-        self.tel = self.usuario[0].entry_tel.get()  # telefone não está como StringVar
-        self.rua = self.usuario[0].rua_var.get()
-        self.numero = self.usuario[0].numero_var.get()
-        self.cep = self.usuario[0].entry_cep.get()  # CEP não está como StringVar
-        self.bairro = self.usuario[0].bairro_var.get()
-        self.cidade = self.usuario[0].cidade_var.get()
+        self.tel = self.usuario[0].entry_tel.get() 
+        self.email = self.usuario[0].rua_email.get()
+        self.cpf = self.usuario[0].entry_cpf.get() 
 
         '''
         Criação do DataFrame com os dados do usuário
@@ -35,11 +32,8 @@ class Documento(Usuario):
             'Sobrenome': [self.sobrenome],
             'Data de Nascimento': [self.data_nasc],
             'Telefone': [self.tel],
-            'Rua': [self.rua],
-            'Número': [self.numero],
-            'CEP': [self.cep],
-            'Bairro': [self.bairro],
-            'Cidade': [self.cidade]
+            'E-mail': [self.email],
+            'CPF': [self.cpf]
         }
         df_usuario = pd.DataFrame(dados_usuario)
 
@@ -79,3 +73,7 @@ class Documento(Usuario):
         pdfkit.from_file('relatorio.html', 'ResultadoTeste.pdf')
 
         self.relatorio_usuario()
+
+if __name__ == "__main__":
+    usuario = Usuario()
+    documento = Documento(Usuario)
