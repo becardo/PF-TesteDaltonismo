@@ -9,29 +9,23 @@ class Usuario(TesteDaltonismo):
         self.janela_teste = tk.Tk()
         self.iniciar_teste()
         self.janela_teste.mainloop() 
-        
-    def habilitar_botao(self, botao, estado):
-        """
-        Habilita ou desabilita um botão baseado no nome do botão e no estado desejado.
-        :param botao: Nome do botão a ser modificado ('bt_proxima' ou 'bt_gerar_pdf').
-        :param estado: Estado desejado ('normal' ou 'disabled').
-        """
-        if hasattr(self, botao):
-            getattr(self, botao).config(state=estado)
-        else:
-            raise ValueError(f"Botão desconhecido: {botao}")
 
-    def configurar_validacao(self, entry, tipo):
+    def configurar_validacao(self, entry: tk.Entry, tipo: str) -> None:
         '''
         Configura a validação para aceitar apenas caracteres numéricos ou letras.
+        Para entrys que recebem entradas numéricas, caracteres como -, (, ), e . são permitidos.
+        Para entrys que recebem entradas de letras, apenas caracteres como letras e "  " são permitos.
         '''
-        def validar_entrada(action, value_if_allowed):
-            if action == '1':  # Inserção
+        def validar_entrada(action: str, value_if_allowed: str) -> bool:
+            if action == '1': 
                 try:
                     if tipo == 'numerico':
-                        int(value_if_allowed)
+                        for char in value_if_allowed:
+                            if not (char.isdigit() or char in "-()."):
+                                raise ValueError
+
                     elif tipo == 'letras':
-                        if not value_if_allowed.isalpha():
+                        if not value_if_allowed.replace(" ","").isalpha():
                             raise ValueError
                 except ValueError:
                     return False
@@ -39,18 +33,24 @@ class Usuario(TesteDaltonismo):
 
         vcmd = (entry.register(validar_entrada), '%d', '%P')
         entry.config(validate='key', validatecommand=vcmd)
-        
-    def calendario(self):
+
+    def calendario(self) -> None:
+        '''
+        Cria um calendário para a data de nascimento do usuário.
+        '''
         self.calendario = Calendar(self.frame, fg="gray75", bg="blue", font=("Times",'9','bold'), locale='pt_br')
         self.calendario.place(relx= 0.5, rely=0.1)
         self.calData = tk.Button(self.frame, text="Inserir Data", command= self.print_cal)
         self.calData.place(relx=0.6, rely=0.4, height=25, width=100)
 
-    def print_cal(self):
+    def print_cal(self) -> None:
+        '''
+        Imprime a data de nascimento do usuário no calendário. Em seguida, o calendário some.
+        '''
         dataIni = self.calendario.get_date()
         self.calendario.destroy()
-        self.entry_data.delete(0, END)
-        self.entry_data.insert(END, dataIni)
+        self.entry_data.delete(0, tk.END)
+        self.entry_data.insert(0, dataIni)
         self.calData.destroy()
 
     def iniciar_teste(self) -> None:
@@ -151,14 +151,14 @@ class Usuario(TesteDaltonismo):
         '''
         self.habilitar_botao('bt_iniciar','disabled') 
 
-    def check_entradas(self, *args:str) -> None:
+    def check_entradas(self, *args: str) -> None:
         '''
          Verifica se os campos estão preenchidos.
         '''
         campos_obrigatorios = [
             self._nome_var.get(), 
             self._sobrenome_var.get(), 
-            self._data_var.get(),
+            #self._data_var.get(),
             self._tel_var.get(),
             self.__email_var.get(),
             self.__cpf_var.get()
