@@ -1,4 +1,6 @@
 import tkinter as tk
+import subprocess
+import sys
 #from InterfaceDaltonismo import TesteDaltonismo
 #from usuario import Usuario
 #from ishihara import Ishihara
@@ -25,7 +27,13 @@ class Resultado():
           self.frame, text="Resultado do teste: ", bg='#F0F8FF', fg='black', font=('arial', 12))
       self.label_cabecalho.place(relx=0.01, rely=0.01)
 
-      self.bt_gerar_pdf = tk.Button(self.frame, text="Gerar PDF",bd=4, bg='#4682B4', fg='#F5FFFA', activebackground='#B0E0E6', activeforeground='#4682B4', font=('arial', 12))
+      self.bt_gerar_pdf = tk.Button(self.frame, text="Gerar PDF",bd=4, bg='#4682B4', fg='#F5FFFA', activebackground='#B0E0E6', activeforeground='#4682B4', font=('arial', 12), command= self.gerar_pdf)
       self.bt_gerar_pdf.place(relx= 0.4, rely=0.9)
+
+    def gerar_pdf(self)-> None:
+      '''
+      Este método executa comando sys.executable, chama o arquivo documento.py para gerar o PDF com os resultados.
+      '''
+      subprocess.Popen([sys.executable, 'documento.py'])
 
 Resultado()
