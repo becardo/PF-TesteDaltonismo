@@ -2,7 +2,7 @@ Este é o repositório para o Projeto Final da disciplina de Programação Orien
 
 Como tema para o projeto, utilizando a linguagem de programação Python, pensamos em trazer uma aplicação mais voltada para a área de detecção e prognóstico, como e com que ferramentas a tecnologia pode nos auxiliar nos dias de hoje com problemas que podem afetar nosso cotidiano. 
 
-Assim, chegamos no tema: "Prognóstico de Daltonismo: como a tecnologia pode auxiliar na detecção do distúrbio através da automatização e acessibilidade". Uma ideia com o objetivo de tornar o exame prognóstico de daltonismo algo mais eficiênte, autônomo e claro, utilizando tudo o que a linguagem Python tem a nos oferecer.
+Assim, chegamos no tema: _"Prognóstico de Daltonismo: como a tecnologia pode auxiliar na detecção do distúrbio através da automatização e acessibilidade"_. Uma ideia com o objetivo de tornar o exame prognóstico de daltonismo algo mais eficiênte, autônomo e claro, utilizando tudo o que a linguagem Python tem a nos oferecer.
 
 O daltonismo é um disturbio de visão que afeta a capacidade de distinguir diferentes tons ou cores umas das outras, em geral as cores vermelho, verde e azul.
 Existem três tipos: 
@@ -21,6 +21,7 @@ Disposta essa pequena explicação, nosso projeto implementa o Teste de Ishihara
 
 
 Do grupo,
+
 Ana, Alice e Isaac
 
 
