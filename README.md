@@ -8,9 +8,10 @@ tornar o exame prognóstico de daltonismo algo mais eficiênte, autônomo e clar
 
 O daltonismo é um disturbio de visão que afeta a capacidade de distinguir diferentes tons ou cores umas das outras, em geral as cores vermelho, verde e azul.
 Existem três tipos: 
-*protanopia, dificuldade em distinguir as cores azul e verde E vermelho e verde;
-*deuteranopia, dificuldade em distinguir verde e vermelho;
-*tritanopia, dificuldade em distiguir azul e amarelo.
+
+*protanopia*, dificuldade em distinguir as cores azul e verde E vermelho e verde;
+*deuteranopia*, dificuldade em distinguir verde e vermelho;
+*tritanopia*, dificuldade em distiguir azul e amarelo.
 Existe também a manifestação mais rara do disturbio, o daltonismo acromático, onde a pessoa não vê cores, apenas tons de cinza, preto e branco.
 
 Para termos um diagnóstico são feitos alguns testes com o profissional oftalmologista, e um desses testes é o Teste de Ishihara. No Teste de Ishihara são mostradas várias lâminas com
