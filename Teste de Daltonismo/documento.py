@@ -1,63 +1,39 @@
 import pandas as pd
 import pdfkit
-import webbrowser
 from usuario import Usuario
-from tkinter import tk
 from ishihara import Ishihara
 
 class Documento(Usuario, Ishihara):
-    def __init__(self, usuario: list, respostas: list, placas: list) -> None:
-        self.usuario = usuario
-        self.respostas = respostas
-        self.placas = placas
-        self.gerar_relatorio_pdf()
+    def __init__(self) -> None:
+        super().__init__()
 
-    def relatorio_usuario(self) -> None:
-        webbrowser.open("ResultadoTeste.pdf")
-
-    def gerar_relatorio_pdf(self) -> None:
-        
-        self.nome = self.usuario[0].nome_var.get()
-        self.sobrenome = self.usuario[0].sobrenome_var.get()
-        self.data_nasc = self.usuario[0].data_var.get()
-        self.tel = self.usuario[0].entry_tel.get() 
-        self.email = self.usuario[0].rua_email.get()
-        self.cpf = self.usuario[0].entry_cpf.get() 
-
-        '''
-        Criação do DataFrame com os dados do usuário
-        '''
+    def gerar_relatorio_pdf(self):
+        # Obter os dados do usuário do objeto Usuario
         dados_usuario = {
-            'Nome': [self.nome],
-            'Sobrenome': [self.sobrenome],
-            'Data de Nascimento': [self.data_nasc],
-            'Telefone': [self.tel],
-            'E-mail': [self.email],
-            'CPF': [self.cpf]
+            'Nome': [self._nome_var.get()],
+            'Sobrenome': [self._sobrenome_var.get()],
+            'Data de Nascimento': [self._data_var.get()],
+            'Telefone': [self._tel_var.get()],
+            'E-mail': [self.__email_var.get()],
+            'CPF': [self.__cpf_var.get()]
         }
         df_usuario = pd.DataFrame(dados_usuario)
 
-        '''
-        Criação do DataFrame com os resultados do teste
-        '''
+        # Obter os resultados do teste de Ishihara do objeto Ishihara
         dados_teste = []
-        for i, resposta in enumerate(self.respostas):
+        for i, resposta in enumerate(self.resp_t):
             dados_teste.append({
                 'Placa': i + 1,
                 'Resposta': resposta,
-                'Esperado': self.placas[i]['expected']
+                'Esperado': self.ishihara_placas[i]['expected']['normal']
             })
         df_teste = pd.DataFrame(dados_teste)
 
-        '''
-        Salvando os DataFrames como arquivos HTML
-        '''
+        # Salvar os DataFrames como arquivos HTML
         df_usuario.to_html('usuario.html', index=False)
         df_teste.to_html('teste.html', index=False)
 
-        '''
-        Gerando o arquivo PDF a partir do HTML
-        '''
+        # Gerar o arquivo PDF a partir do HTML
         with open('relatorio.html', 'w') as f:
             f.write('<h1>Resultados do Teste de Daltonismo</h1>')
             f.write('<h2>Dados do Usuário</h2>')
@@ -67,13 +43,7 @@ class Documento(Usuario, Ishihara):
             with open('teste.html', 'r') as teste_html:
                 f.write(teste_html.read())
 
-        '''
-        Convertendo HTML para PDF
-        '''
         pdfkit.from_file('relatorio.html', 'ResultadoTeste.pdf')
 
-        self.relatorio_usuario()
-
-if __name__ == "__main__":
-    usuario = Usuario()
-    documento = Documento(Usuario)
+# Inicializa a classe GerarPDF
+Documento()
