@@ -1,11 +1,13 @@
-import tkinter as tk
-from tkinter import ttk
-from typing import Any, Dict, List
-from PIL import Image, ImageTk
-from InterfaceDaltonismo import TesteDaltonismo
 import subprocess
 import sys
-#from documento import Documento
+import tkinter as tk
+from tkinter import ttk
+from typing import Any, Dict, List, Union
+
+from PIL import Image, ImageTk
+
+from InterfaceDaltonismo import TesteDaltonismo
+
 
 class Ishihara(TesteDaltonismo):
     def __init__(self) -> None:
@@ -58,7 +60,7 @@ class Ishihara(TesteDaltonismo):
         '''
         lista com as placas de Ishihara, opções e respostas esperadas para cada caso 
         '''
-        self.tx_placa = tk.Label(self.scrollable_frame, text="Placa 1",background= '#F0F8FF')
+        self.tx_placa = tk.Label(self.scrollable_frame, text="Placa 1")
         self.tx_placa.pack(pady=(10, 0))
 
         self.tx_imagem = tk.Label(self.scrollable_frame)
@@ -67,7 +69,7 @@ class Ishihara(TesteDaltonismo):
         self.op_var = tk.StringVar()
         self.op_var.trace('w', self.selecionar_op)
 
-        self.op_menu = ttk.Combobox(self.scrollable_frame, textvariable=self.op_var, state="readonly")
+        self.op_menu = ttk.Combobox(self.scrollable_frame, textvariable=self.op_var,state="readonly")
         self.op_menu.pack(pady=(10, 0))
 
         self.bt_proxima = tk.Button(self.scrollable_frame, text="Próxima",bd=4, bg='#4682B4', fg='#F5FFFA', activebackground='#B0E0E6', activeforeground='#4682B4', font=('arial', 10), command=self.px_imagem, state=tk.DISABLED)
@@ -83,44 +85,43 @@ class Ishihara(TesteDaltonismo):
 
     def carregar_placas(self) -> List[Dict[str, Any]]:
         return [
-            {"image": "ishihara/Ishihara01.png", "options": ["1", "2", "12"], "expected": {"normal": "12", "protanopia": "1", "deuteranopia": "2"}},
-            {"image": "ishihara/Ishihara02.png", "options": ["3", "6", "8"], "expected": {"normal": "8", "protanopia": "3"}},
-            {"image": "ishihara/Ishihara03.png", "options": ["3", "5", "6"], "expected": {"normal": "6", "protanopia": "5"}},
-            {"image": "ishihara/Ishihara04.png", "options": ["10", "29", "70"], "expected": {"normal": "29", "protanopia": "70"}},
-            {"image": "ishihara/Ishihara05.jpg", "options": ["35", "57", "66"], "expected": {"normal": "57", "protanopia": "35"}},
-            {"image": "ishihara/Ishihara06.png", "options": ["2", "3", "5"], "expected": {"normal": "5", "protanopia": "2"}},
-            {"image": "ishihara/Ishihara07.png", "options": ["2", "3", "5"], "expected":{"normal": "3", "protanopia": "5"}},
-            {"image": "ishihara/Ishihara08.png", "options": ["13", "15", "17"], "expected":{"normal": "15", "protanopia": "17"}},
-            {"image": "ishihara/Ishihara09.png", "options": ["11", "21", "74"], "expected":{"normal": "74", "protanopia": "21"}},
-            {"image": "ishihara/Ishihara10.jpg", "options": ["1", "2", "nada"], "expected":{"normal": "2", "protanopia": "1", "protanopia": "nada"}},
-            {"image": "ishihara/Ishihara11.jpg", "options": ["3", "6", "nada"], "expected":{"normal": "6", "protanopia": "3", "protanopia": "nada"}},
-            {"image": "ishihara/Ishihara12.jpg", "options": ["31", "97", "nada"], "expected":{"normal": "97", "protanopia": "31", "protanopia": "nada"}},
-            {"image": "ishihara/Ishihara13.png", "options": ["15", "45", "nada"], "expected":{"normal": "45", "protanopia": "15", "protanopia": "nada"}},
-            {"image": "ishihara/Ishihara14.png", "options": ["3", "5", "nada"], "expected":{"normal": "5", "protanopia": "3", "protanopia": "nada"}},
-            {"image": "ishihara/Ishihara15.png", "options": ["1", "7", "nada"], "expected":{"normal": "7", "protanopia": "1", "protanopia": "nada"}},
-            {"image": "ishihara/Ishihara16.png", "options": ["16", "26", "nada"], "expected":{"normal": "16", "protanopia": "26", "protanopia": "nada"}},
-            {"image": "ishihara/Ishihara17.png", "options": ["13", "73", "nada"], "expected":{"normal": "73", "protanopia": "13", "protanopia": "nada"}},
-            {"image": "ishihara/Ishihara18.png", "options": ["5", "3", "nada"], "expected":{"normal": "nada", "protanopia": "5"}},
-            {"image": "ishihara/Ishihara19.jpg", "options": ["1", "2", "nada"], "expected":{"normal": "nada", "protanopia": "2"}},
-            {"image": "ishihara/Ishihara20.png", "options": ["5", "45", "nada"], "expected":{"normal": "nada", "protanopia": "45"}},
-            {"image": "ishihara/Ishihara21.jpg", "options": ["13", "73", "nada"], "expected":{"normal": "nada", "protanopia": "73"}},
-            {"image": "ishihara/Ishihara22.png", "options": ["2", "6", "26"], "expected":{"normal": "26", "protanopia": "6", "deuteranopia": "2"}},
-            {"image": "ishihara/Ishihara23.png", "options": ["2", "4", "42"], "expected":{"normal": "42", "protanopia": "2", "deuteranopia": "4"}},
-            {"image": "ishihara/Ishihara24.jpg", "options": ["3", "5", "35"], "expected":{"normal": "35", "protanopia": "5", "deuteranopia": "3"}},
-            {"image": "ishihara/Ishihara25.jpg", "options": ["6", "9", "96"], "expected":{"normal": "96", "protanopia": "6", "deuteranopia": "9"}},
-            {"image": "ishihara/Ishihara26.png", "options": ["roxo", "vermelho", "roxo e vermelho"], "expected":{"normal": "roxo e vermelho", "protanopia": "roxo", "deuteranopia": "vermelho"}},
-            {"image": "ishihara/Ishihara27.jpg", "options": ["roxo", "vermelho", "roxo e vermelho"], "expected":{"normal": "roxo e vermelho", "protanopia": "roxo", "deuteranopia": "vermelho"}},
-            {"image": "ishihara/Ishihara28.jpg", "options": ["uma linha", "um número", "nada"], "expected":{"normal": "nada", "protanopia": "uma linha"}},
-            {"image": "ishihara/Ishihara29.png", "options": ["uma linha", "um número", "nada"], "expected":{"normal": "nada", "protanopia": "uma linha"}},
-            {"image": "ishihara/Ishihara30.png", "options": ["uma linha verde ou azul", "um número", "nada"], "expected":{"normal": "uma linha verde ou azul", "protanopia": "nada"}},
-            {"image": "ishihara/Ishihara31.jpg", "options": ["uma linha verde ou azul", "um número", "nada"], "expected":{"normal": "uma linha verde ou azul", "protanopia": "nada"}},
-            {"image": "ishihara/Ishihara32.png", "options": ["uma linha", "uma linha laranja", "nada"], "expected":{"normal": "uma linha laranja", "protanopia": "nada" , "protanopia": "uma linha"}},
-            {"image": "ishihara/Ishihara33.jpeg", "options": ["uma linha", "uma linha laranja", "nada"], "expected":{"normal": "uma linha laranja", "protanopia": "nada" , "protanopia": "uma linha"}},
-            {"image": "ishihara/Ishihara34.jpg", "options": ["uma linha azul/verde/amarela", "uma linha verde/vermelha", "uma linha lilas"], "expected":{"normal": "uma linha azul/verde/amarela", "protanopia": "uma linha verde/vermelha" , "protanopia": "uma linha lilas"}},
-            {"image": "ishihara/Ishihara35.png", "options": ["uma linha azul/verde/amarela", "uma linha verde/azul", "uma linha lilas"], "expected":{"normal": "uma linha azul/verde/amarela", "protanopia": "uma linha verde/azul" , "protanopia": "uma linha lilas"}},
-            {"image": "ishihara/Ishihara36.jpeg", "options": ["uma linha lilas/laranja", "uma linha verde/azul", "uma linha lilas"], "expected":{"normal": "uma linha lilas/laranja", "protanopia": "uma linha verde/azul" , "protanopia": "uma linha lilas"}},
-            {"image": "ishihara/Ishihara37.png", "options": ["uma linha lilas/laranja", "uma linha verde/azul", "uma linha lilas"], "expected":{"normal": "uma linha lilas/laranja", "protanopia": "uma linha verde/azul" , "protanopia": "uma linha lilas"}},
-            {"image": "ishihara/Ishihara38.png", "options": ["uma linha laranja", "uma linha"], "expected": {"normal": "uma linha laranja", "protanopia": "uma linha", "deuteranopia": "uma linha"}},
+            {"image": "ishihara/Ishihara01.png", "options": ["1", "2", "12", "Nada"], "expected": {"normal": "12", "protanopia": "12", "deuteranopia": "12", "tritanopia": "12"}},
+            {"image": "ishihara/Ishihara02.png", "options": ["3", "6", "8","Nada"], "expected": {"normal": "8", "protanopia": "3", "deuteranopia": "3", "tritanopia": "8"}},
+            {"image": "ishihara/Ishihara03.png", "options": ["3", "5", "6", "Nada"], "expected": {"normal": "6", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "12"}},
+            {"image": "ishihara/Ishihara04.png", "options": ["10", "29", "70","Nada"], "expected": {"normal": "29", "protanopia": "70","deuteranopia": "70","tritanopia": "29"}},
+            {"image": "ishihara/Ishihara05.jpg", "options": ["7", "57", "50","Nada"], "expected": {"normal": "57", "protanopia": "7","deuteranopia": "70","tritanopia": "57"}},
+            {"image": "ishihara/Ishihara06.png", "options": ["2", "3", "5","Nada"], "expected": {"normal": "5", "protanopia": "2","deuteranopia": "2","tritanopia": "5"}},
+            {"image": "ishihara/Ishihara07.png", "options": ["2", "3", "5","Nada"], "expected":{"normal": "3", "protanopia": "5","deuteranopia": "5","tritanopia": "3"}},
+            {"image": "ishihara/Ishihara08.png", "options": ["13", "15", "17","Nada"], "expected":{"normal": "15", "protanopia": "17", "deuteranopia": "17","tritanopia": "15"}},
+            {"image": "ishihara/Ishihara09.png", "options": ["11", "21", "74","Nada"], "expected":{"normal": "74", "protanopia": "21", "deuteranopia": "21","tritanopia": "74"}},
+            {"image": "ishihara/Ishihara10.jpg", "options": ["0", "2", "Nada","3"], "expected":{"normal": "2", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "2"}},
+            {"image": "ishihara/Ishihara11.jpg", "options": ["2", "6", "Nada","3"], "expected":{"normal": "6", "protanopia": "nada", "deuteranopia": "2","tritanopia": "6"}},
+            {"image": "ishihara/Ishihara12.jpg", "options": ["31", "97", "Nada","91"], "expected":{"normal": "97", "protanopia": "Nada","deuteranopia": "91","tritanopia": "97"}},
+            {"image": "ishihara/Ishihara13.png", "options": ["15", "45", "Nada","5"], "expected":{"normal": "45", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "45"}},
+            {"image": "ishihara/Ishihara14.png", "options": ["3", "5", "Nada","0"], "expected":{"normal": "5", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "5"}},
+            {"image": "ishihara/Ishihara15.png", "options": ["1", "7", "Nada","2"], "expected":{"normal": "7", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "7"}},
+            {"image": "ishihara/Ishihara16.png", "options": ["16", "26", "Nada","6"], "expected":{"normal": "16", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "16"}},
+            {"image": "ishihara/Ishihara17.png", "options": ["13", "73", "Nada","10"], "expected":{"normal": "73", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "73"}},
+            {"image": "ishihara/Ishihara18.png", "options": ["5", "3", "Nada","Abstrato de cores"], "expected":{"normal": "Abstrato de cores", "protanopia": "Nada","deuteranopia": "Nada","tritanopia": "Abstrato de cores"}},
+            {"image": "ishihara/Ishihara19.jpg", "options": ["1", "2", "Nada","Abstrato de cores"], "expected":{"normal": "Abstrato de cores", "protanopia": "Nada","deuteranopia": "Nada","tritanopia": "Abstrato de cores"}},
+            {"image": "ishihara/Ishihara20.png", "options": ["5", "45", "Nada","Abstrato de cores"], "expected":{"normal": "Abstrato de cores", "protanopia": "Nada","deuteranopia": "Nada","tritanopia": "Abstrato de cores"}},
+            {"image": "ishihara/Ishihara21.jpg", "options": ["13", "73", "Nada","Abstrato de cores"], "expected":{"normal": "Abstrato de cores", "protanopia": "Nada","deuteranopia": "Nada","tritanopia": "Abstrato de cores"}},
+            {"image": "ishihara/Ishihara22.png", "options": ["2", "Nada", "26","20"], "expected":{"normal": "26", "protanopia": "20", "deuteranopia": "2","tritanopia": "26"}},
+            {"image": "ishihara/Ishihara23.png", "options": ["2", "4", "42","Nada"], "expected":{"normal": "42", "protanopia": "42", "deuteranopia": "4","tritanopia": "42"}},
+            {"image": "ishihara/Ishihara24.jpg", "options": ["3", "5", "35","Nada"], "expected":{"normal": "35", "protanopia": "3", "deuteranopia": "35","tritanopia": "35"}},
+            {"image": "ishihara/Ishihara25.jpg", "options": ["6", "9", "96","Nada"], "expected":{"normal": "96", "protanopia": "9", "deuteranopia": "96","tritanopia": "96"}},
+            {"image": "ishihara/Ishihara26.png", "options": ["Duas linhas de cores diferentes", "Duas linhas da mesma cor", "Duas linhas", "Uma linha"], "expected":{"normal": "Duas linhas de cores diferentes", "protanopia": "Duas linhas de cores diferentes", "deuteranopia": "Uma linha","tritanopia": "Duas linhas da mesma cor"}},
+            {"image": "ishihara/Ishihara27.jpg", "options": ["Uma linha", "Uma linha e bolinhas", "Duas linhas","Nada"], "expected":{"normal": "Duas linhas", "protanopia": "Uma linha", "deuteranopia": "Uma linha e bolinhas","tritanopia": "Uma linha e bolinhas"}},
+            {"image": "ishihara/Ishihara28.jpg", "options": ["Uma linha", "Nada", "Abstrato de cores"], "expected":{"normal": "Abstrato de cores", "protanopia": "Nada","deuteranopia": "Nada","tritanopia": "Abstrato de cores"}},
+            {"image": "ishihara/Ishihara29.png", "options": ["Uma linha", "Nada", "Abstrato de cores"], "expected":{"normal": "Abstrato de cores", "protanopia": "Nada","deuteranopia": "Nada","tritanopia": "Abstrato de cores"}},
+            {"image": "ishihara/Ishihara30.png", "options": ["Uma linha", "Um numero", "Nada"], "expected":{"normal": "Uma linha", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "Abstrato de cores"}},
+            {"image": "ishihara/Ishihara31.jpg", "options": ["Uma linha", "Um numero", "Nada"], "expected":{"normal": "Uma linha", "protanopia": "Nada","deuteranopia": "Uma linha","tritanopia": "Uma linha"}},
+            {"image": "ishihara/Ishihara32.png", "options": ["Uma linha", "Um numero", "nada"], "expected":{"normal": "Uma linha", "protanopia": "Nada" , "deuteranopia": "Nada","tritanopia": "Uma linha"}},
+            {"image": "ishihara/Ishihara33.jpeg", "options": ["Uma linha", "Um numero", "Nada"], "expected":{"normal": "Uma linha", "protanopia": "Nada" , "deuteranopia": "Nada","tritanopia": "Uma linha"}},
+            {"image": "ishihara/Ishihara35.png", "options": ["Nada", "Dois traços", "Uma linha"], "expected":{"normal": "Uma linha", "protanopia": "Nada" , "deuteranopia": "Dois traços","tritanopia": "Uma linha"}},
+            {"image": "ishihara/Ishihara36.jpeg", "options": ["Uma linha", "Nada", "Um numero"], "expected":{"normal": "Uma linha", "protanopia": "Nada" , "deuteranopia": "Uma linha","tritanopia": "Uma linha"}},
+            {"image": "ishihara/Ishihara37.png", "options": ["Uma curva", "Nada", "Uma linha"], "expected":{"normal": "Uma linha", "protanopia": "Uma curva" , "deuteranopia": "Nada","tritanopia": "Uma linha"}},
+            {"image": "ishihara/Ishihara38.png", "options": ["Uma_linha","Nada","Um_numero"],"expected": {"normal": "Uma_linha", "protanopia": "Uma_linha", "deuteranopia":"Uma_linha","tritanopia":"Uma_linha"}},
         ]
 
     def mostrar_imagem(self, index: int) -> None:
@@ -135,6 +136,7 @@ class Ishihara(TesteDaltonismo):
         '''
         Carrega a imagem.
         '''
+        print(plate["image"])
         image = Image.open(plate["image"])
         image = image.resize((450, 450), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(image)
@@ -171,6 +173,7 @@ class Ishihara(TesteDaltonismo):
         normal_count = 0
         protanopia_count = 0
         deuteranopia_count = 0
+        tritanopia_count = 0
 
         resul_ = []
 
@@ -185,14 +188,17 @@ class Ishihara(TesteDaltonismo):
             elif escolha_usuario == expected.get("deuteranopia"):
                 deuteranopia_count += 1
                 resul_.append(f"Placa {i+1}: {escolha_usuario} (Deuteranopia)")
-            else:
-                resul_.append(f"Placa {i+1}: {escolha_usuario} (Resposta Inválida)")
+            elif escolha_usuario == expected.get("tritanopia"):
+                tritanopia_count += 1
+                resul_.append(f"Placa {i+1}: {escolha_usuario} (Tritanopia)")
 
-        if protanopia_count > deuteranopia_count and protanopia_count > normal_count:
+        if protanopia_count > deuteranopia_count and protanopia_count > normal_count and protanopia_count > tritanopia_count:
             diagnostico = "Protanopia"
-        elif deuteranopia_count > protanopia_count and deuteranopia_count > normal_count:
+        elif deuteranopia_count > protanopia_count and deuteranopia_count > normal_count and deuteranopia_count > tritanopia_count:
             diagnostico = "Deuteranopia"
-        elif normal_count > protanopia_count and normal_count > deuteranopia_count:
+        elif tritanopia_count > protanopia_count and tritanopia_count > normal_count and tritanopia_count > normal_count:
+            diagnostico = "Tritanopia"
+        elif normal_count > protanopia_count and normal_count > deuteranopia_count and normal_count > tritanopia_count:
             diagnostico = "Visão Normal"
         else:
             diagnostico = "Indeterminado"
@@ -205,7 +211,7 @@ class Ishihara(TesteDaltonismo):
         '''
         Este método executa comando sys.executable, chama o arquivo documento.py para gerar o PDF com os resultados.
         '''
-        subprocess.Popen([sys.executable, 'resultado.py'])
+        self.mostrar_resultados()
+        subprocess.Popen([sys.executable, 'documento.py'])
 
-
-Ishihara()
+#Ishihara()
