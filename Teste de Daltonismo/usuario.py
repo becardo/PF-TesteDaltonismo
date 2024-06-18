@@ -1,11 +1,14 @@
 import tkinter as tk
+from PIL import Image, ImageTk
 import subprocess
 import sys
 from tkcalendar import Calendar, DateEntry
 from InterfaceDaltonismo import TesteDaltonismo
+from ishihara import Ishihara
 
 class Usuario(TesteDaltonismo):
     def __init__(self) -> None:
+        #self.ishihara = Ishihara()
         self.janela_teste = tk.Tk()
         self.iniciar_teste()
         self.janela_teste.mainloop() 
@@ -172,7 +175,9 @@ class Usuario(TesteDaltonismo):
         '''
         Este método executa comando sys.executable, que abre a janela de execução do arquivo Ishihara.py.
         '''
-        subprocess.Popen([sys.executable, 'ishihara.py'])
+        #subprocess.Popen([sys.executable, 'ishihara.py'])
+        Ishihara()
+
 
 '''
 Inicializa a classe Usuario.
