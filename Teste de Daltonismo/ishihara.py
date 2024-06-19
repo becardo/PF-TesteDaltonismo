@@ -1,16 +1,28 @@
 import subprocess
 import sys
+import argparse
 import tkinter as tk
+import sqlite3
 from tkinter import ttk
-from typing import Any, Dict, List, Union
-
+from typing import Any, Dict, List
 from PIL import Image, ImageTk
-
 from InterfaceDaltonismo import TesteDaltonismo
 
 
 class Ishihara(TesteDaltonismo):
     def __init__(self) -> None:
+        parser = argparse.ArgumentParser(description='Recebe argumentos para Ishihara')
+        parser.add_argument('--nome', type=str, required=True, help='nome usuario')
+        parser.add_argument('--sobrenome', type=str, required=True, help='sobrenome usuario')
+        parser.add_argument('--data', type=str, required=True, help='data de nascimento')
+        parser.add_argument('--telefone', type=str, required=True, help='telefone')
+        parser.add_argument('--email', type=str, required=True, help='email')
+        parser.add_argument('--cpf', type=str, required=True, help='cpf')
+
+        self.dados_usuario = parser.parse_args()
+
+        print(self.dados_usuario)
+
         self.janela_teste = tk.Tk()
         self.ishihara_placas: List[Dict[str, Any]] = self.carregar_placas()
         self.resp_t: List[str] = []
@@ -86,7 +98,7 @@ class Ishihara(TesteDaltonismo):
     def carregar_placas(self) -> List[Dict[str, Any]]:
         return [
             {"image": "ishihara/Ishihara01.png", "options": ["1", "2", "12", "Nada"], "expected": {"normal": "12", "protanopia": "12", "deuteranopia": "12", "tritanopia": "12"}},
-            {"image": "ishihara/Ishihara02.png", "options": ["3", "6", "8","Nada"], "expected": {"normal": "8", "protanopia": "3", "deuteranopia": "3", "tritanopia": "8"}},
+            {"image": "ishihara/Ishihara02.png", "options": ["3", "6", "8","Nada"], "expected": {"normal": "8", "protanopia": "3", "deuteranopia": "3", "tritanopia": "8"}}, 
             {"image": "ishihara/Ishihara03.png", "options": ["3", "5", "6", "Nada"], "expected": {"normal": "6", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "12"}},
             {"image": "ishihara/Ishihara04.png", "options": ["10", "29", "70","Nada"], "expected": {"normal": "29", "protanopia": "70","deuteranopia": "70","tritanopia": "29"}},
             {"image": "ishihara/Ishihara05.jpg", "options": ["7", "57", "50","Nada"], "expected": {"normal": "57", "protanopia": "7","deuteranopia": "70","tritanopia": "57"}},
@@ -136,7 +148,6 @@ class Ishihara(TesteDaltonismo):
         '''
         Carrega a imagem.
         '''
-        print(plate["image"])
         image = Image.open(plate["image"])
         image = image.resize((450, 450), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(image)
@@ -206,6 +217,39 @@ class Ishihara(TesteDaltonismo):
         resul_.append(f"\nDiagnóstico Final: {diagnostico}")
 
         self.tx_resultado.config(text="\n".join(resul_))
+        self.salvar_dados(diagnostico)
+
+    def salvar_dados(self, diagnostico):
+      # Conectar ao banco de dados (ou criar um novo banco de dados .db)
+      conn = sqlite3.connect('pacientes.db')
+      cursor = conn.cursor()
+
+      # Criar a tabela com a coluna diagnostico
+      cursor.execute('''
+        CREATE TABLE IF NOT EXISTS pacientes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            sobrenome TEXT NOT NULL,
+            data_nascimento TEXT NOT NULL,
+            telefone TEXT NOT NULL,
+            email TEXT NOT NULL,        
+            cpf TEXT NOT NULL,
+            diagnostico TEXT
+          )
+      ''')
+
+      # Confirmar as mudanças
+      conn.commit()
+
+      # Lista de objetos (dicionários) com os dados dos usuários
+
+      # Inserir dados na tabela a partir dos objetos
+      cursor.execute('''
+            INSERT INTO pacientes (nome, sobrenome, data_nascimento, telefone,  email, cpf, diagnostico) VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (self.dados_usuario.nome, self.dados_usuario.sobrenome, self.dados_usuario.data,self.dados_usuario.telefone,self.dados_usuario.email, self.dados_usuario.cpf, diagnostico))
+
+      # Confirmar as mudanças
+      conn.commit()
 
     def janela_resultado(self)-> None:
         '''
@@ -214,4 +258,4 @@ class Ishihara(TesteDaltonismo):
         self.mostrar_resultados()
         subprocess.Popen([sys.executable, 'documento.py'])
 
-#Ishihara()
+Ishihara()
