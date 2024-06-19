@@ -1,14 +1,11 @@
 import tkinter as tk
-from PIL import Image, ImageTk
 import subprocess
 import sys
 from tkcalendar import Calendar, DateEntry
 from InterfaceDaltonismo import TesteDaltonismo
-from ishihara import Ishihara
 
 class Usuario(TesteDaltonismo):
     def __init__(self) -> None:
-        #self.ishihara = Ishihara()
         self.janela_teste = tk.Tk()
         self.iniciar_teste()
         self.janela_teste.mainloop() 
@@ -160,8 +157,7 @@ class Usuario(TesteDaltonismo):
         '''
         campos_obrigatorios = [
             self._nome_var.get(), 
-            self._sobrenome_var.get(), 
-            #self._data_var.get(),
+            self._sobrenome_var.get(),
             self._tel_var.get(),
             self.__email_var.get(),
             self.__cpf_var.get()
@@ -175,9 +171,7 @@ class Usuario(TesteDaltonismo):
         '''
         Este método executa comando sys.executable, que abre a janela de execução do arquivo Ishihara.py.
         '''
-        #subprocess.Popen([sys.executable, 'ishihara.py'])
-        Ishihara()
-
+        subprocess.Popen([sys.executable, 'ishihara.py', '--nome',self._nome_var.get(), '--sobrenome',self._sobrenome_var.get(), '--data',self._data_var.get(), '--telefone',self._tel_var.get(),'--email', self.__email_var.get(),'--cpf', self.__cpf_var.get()])
 
 '''
 Inicializa a classe Usuario.
