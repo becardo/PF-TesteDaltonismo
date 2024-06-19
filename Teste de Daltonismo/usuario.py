@@ -169,7 +169,7 @@ class Usuario(TesteDaltonismo):
 
     def iniciar_bt(self)-> None:
         '''
-        Este método executa comando sys.executable, que abre a janela de execução do arquivo Ishihara.py.
+        Este método executa comando sys.executable, que abre a janela de execução do arquivo Ishihara.py e passa dos parâmetros do Usuário para Ishihara.
         '''
         subprocess.Popen([sys.executable, 'ishihara.py', '--nome',self._nome_var.get(), '--sobrenome',self._sobrenome_var.get(), '--data',self._data_var.get(), '--telefone',self._tel_var.get(),'--email', self.__email_var.get(),'--cpf', self.__cpf_var.get()])
 
