@@ -1,49 +1,47 @@
-import pandas as pd
-import pdfkit
-from usuario import Usuario
-from ishihara import Ishihara
+import sqlite3
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from datetime import datetime
 
-class Documento(Usuario, Ishihara):
-    def __init__(self) -> None:
-        super().__init__()
+# Função para formatar a data de nascimento
+def formatar_data(data_nascimento):
+    try:
+        return datetime.strptime(data_nascimento, '%Y-%m-%d').strftime('%d/%m/%Y')
+    except ValueError:
+        return data_nascimento  # Retornar a data original se não puder ser formatada
 
-    def gerar_relatorio_pdf(self):
-        # Obter os dados do usuário do objeto Usuario
-        dados_usuario = {
-            'Nome': [self._nome_var.get()],
-            'Sobrenome': [self._sobrenome_var.get()],
-            'Data de Nascimento': [self._data_var.get()],
-            'Telefone': [self._tel_var.get()],
-            'E-mail': [self.__email_var.get()],
-            'CPF': [self.__cpf_var.get()]
-        }
-        df_usuario = pd.DataFrame(dados_usuario)
+# Função para gerar PDF com os dados do último usuário adicionado
+def gerar_pdf(dados_usuario):
+    c = canvas.Canvas("usuario.pdf", pagesize=letter)
+    width, height = letter
 
-        # Obter os resultados do teste de Ishihara do objeto Ishihara
-        dados_teste = []
-        for i, resposta in enumerate(self.resp_t):
-            dados_teste.append({
-                'Placa': i + 1,
-                'Resposta': resposta,
-                'Esperado': self.ishihara_placas[i]['expected']['normal']
-            })
-        df_teste = pd.DataFrame(dados_teste)
+    # Adicionar texto ao PDF
+    c.drawString(100, height - 120, f"Nome: {dados_usuario['_nome_var']}")
+    c.drawString(100, height - 140, f"Sobrenome: {dados_usuario['_sobrenome_var']}")
+    c.drawString(100, height - 200, f"E-mail: {dados_usuario['__email_var']}")
+    c.drawString(100, height - 180, f"Data de Nascimento: {dados_usuario['_data_var']}")
+    c.drawString(100, height - 160, f"CPF: {dados_usuario['__cpf_var']}")
+    c.drawString(100, height - 220, f"Telefone: {dados_usuario['_tel_var']}")
+    c.drawString(100, height - 240, f"Diagnóstico: {dados_usuario['diagnostico']}")
 
-        # Salvar os DataFrames como arquivos HTML
-        df_usuario.to_html('usuario.html', index=False)
-        df_teste.to_html('teste.html', index=False)
+    # Salvar o PDF
+    c.save()
 
-        # Gerar o arquivo PDF a partir do HTML
-        with open('relatorio.html', 'w') as f:
-            f.write('<h1>Resultados do Teste de Daltonismo</h1>')
-            f.write('<h2>Dados do Usuário</h2>')
-            with open('usuario.html', 'r') as usuario_html:
-                f.write(usuario_html.read())
-            f.write('<h2>Resultados do Teste</h2>')
-            with open('teste.html', 'r') as teste_html:
-                f.write(teste_html.read())
+# Conectar ao banco de dados
+conn = sqlite3.connect('pacientes.db')
+cursor = conn.cursor()
 
-        pdfkit.from_file('relatorio.html', 'ResultadoTeste.pdf')
+# Pegar o último ID adicionado
+cursor.execute('SELECT * FROM pacientes ORDER BY id DESC LIMIT 1')
+ultimo_usuario = cursor.fetchone()
 
-# Inicializa a classe GerarPDF
-Documento()
+# Fechar a conexão
+conn.close()
+
+# Transformar o resultado em um dicionário
+colunas = ['id','_nome_var', '_sobrenome_var', '_data_var', '_tel_var', '__email_var',  '__cpf_var', 'diagnostico']
+dados_usuario = dict(zip(colunas, ultimo_usuario))
+# Formatar a data de nascimento
+dados_usuario['_data_var'] = formatar_data(dados_usuario['_data_var'])
+# Gerar o PDF com os dados do último usuário adicionado
+gerar_pdf(dados_usuario)
