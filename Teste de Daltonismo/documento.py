@@ -1,47 +1,82 @@
 import sqlite3
 from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from datetime import datetime
+import webbrowser
 
 # Função para formatar a data de nascimento
+# Tentamos formatar a data de nascimento para o formato dd/mm/aaaa para que a mesma fosse exibida corretamente no PDF. Devido algum erro ela não apareceu e decidimos retirar a informação data de nascimento do PDF, mas deixamos a lógica pensada aqui.
 def formatar_data(data_nascimento):
     try:
         return datetime.strptime(data_nascimento, '%Y-%m-%d').strftime('%d/%m/%Y')
     except ValueError:
-        return data_nascimento  # Retornar a data original se não puder ser formatada
+        return data_nascimento  
 
-# Função para gerar PDF com os dados do último usuário adicionado
 def gerar_pdf(dados_usuario):
-    c = canvas.Canvas("usuario.pdf", pagesize=letter)
-    width, height = letter
+    '''
+    Aqui é gerado o PDF com os dados do último usuário adicionado ao banco de dados.
+    '''
+    nome = dados_usuario['_nome_var']
+    pdf_file = f"Resultado_{nome}.pdf"
 
-    # Adicionar texto ao PDF
-    c.drawString(100, height - 120, f"Nome: {dados_usuario['_nome_var']}")
-    c.drawString(100, height - 140, f"Sobrenome: {dados_usuario['_sobrenome_var']}")
-    c.drawString(100, height - 200, f"E-mail: {dados_usuario['__email_var']}")
-    c.drawString(100, height - 180, f"Data de Nascimento: {dados_usuario['_data_var']}")
-    c.drawString(100, height - 160, f"CPF: {dados_usuario['__cpf_var']}")
-    c.drawString(100, height - 220, f"Telefone: {dados_usuario['_tel_var']}")
-    c.drawString(100, height - 240, f"Diagnóstico: {dados_usuario['diagnostico']}")
+    doc = SimpleDocTemplate(pdf_file, pagesize=letter)
+    elements = []
 
-    # Salvar o PDF
-    c.save()
+    styles = getSampleStyleSheet()
+    title_style = styles['Title']
+    title_style.fontSize = 20
+    title_style.alignment = 1  # Centralizar o texto
 
-# Conectar ao banco de dados
+    normal_style = styles['Normal']
+    normal_style.fontSize = 12
+
+    elements.append(Paragraph("Resultado do Teste de Daltonismo", title_style))
+    elements.append(Spacer(1, 0.5 * inch))
+
+    user_info = [
+        f"Nome: {dados_usuario['_nome_var']} {dados_usuario['_sobrenome_var']}",
+        f"CPF: {dados_usuario['__cpf_var']}",
+        f"Telefone: {dados_usuario['_tel_var']}",
+        f"E-mail: {dados_usuario['__email_var']}"
+    ]
+
+    for info in user_info:
+        elements.append(Paragraph(info, normal_style))
+        elements.append(Spacer(1, 0.2 * inch))
+
+    # Adiciona espaço extra entre E-mail e Resultado
+    elements.append(Spacer(1, 0.4 * inch))
+
+    additional_info = [
+        f"Resultado: {dados_usuario['diagnostico']}",
+        "Este resultado é apenas um PROGNÓSTICO, e não exclui a necessidade de consulta com um profissional oftalmologista.",
+        "Caso seu resultado tenha sido Protanopia, Deuteranopia ou Tritanopia, procure um médico e leve estes resultados para avaliação profissional."
+    ]
+
+    for info in additional_info:
+        elements.append(Paragraph(info, normal_style))
+        elements.append(Spacer(1, 0.2 * inch))
+
+    doc.build(elements)
+
+    webbrowser.open(pdf_file)
+
 conn = sqlite3.connect('pacientes.db')
 cursor = conn.cursor()
 
-# Pegar o último ID adicionado
 cursor.execute('SELECT * FROM pacientes ORDER BY id DESC LIMIT 1')
 ultimo_usuario = cursor.fetchone()
 
-# Fechar a conexão
 conn.close()
 
-# Transformar o resultado em um dicionário
-colunas = ['id','_nome_var', '_sobrenome_var', '_data_var', '_tel_var', '__email_var',  '__cpf_var', 'diagnostico']
-dados_usuario = dict(zip(colunas, ultimo_usuario))
-# Formatar a data de nascimento
-dados_usuario['_data_var'] = formatar_data(dados_usuario['_data_var'])
-# Gerar o PDF com os dados do último usuário adicionado
-gerar_pdf(dados_usuario)
+if ultimo_usuario:
+    colunas = ['id', '_nome_var','_sobrenome_var', 'diagnostico', '_tel_var', '__email_var', '__cpf_var','diagnostico']
+    dados_usuario = dict(zip(colunas, ultimo_usuario))
+
+    print("Dados do usuário recuperados:", dados_usuario)
+    gerar_pdf(dados_usuario)
+    
+else:
+    print("Nenhum usuário encontrado no banco de dados.")
