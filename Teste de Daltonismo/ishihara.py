@@ -11,6 +11,9 @@ from InterfaceDaltonismo import TesteDaltonismo
 
 class Ishihara(TesteDaltonismo):
     def __init__(self) -> None:
+        '''
+        Utilizando o módulo argparse, é possível passar parâmetros de Usuário para Ishihara. Os parâmetros que foram passados pelo subprocess.Popen no aquivo usuario.py são 'capturados' aqui para serem usados no arquivo ishihara.py.
+        '''
         parser = argparse.ArgumentParser(description='Recebe argumentos para Ishihara')
         parser.add_argument('--nome', type=str, required=True, help='nome usuario')
         parser.add_argument('--sobrenome', type=str, required=True, help='sobrenome usuario')
@@ -22,6 +25,10 @@ class Ishihara(TesteDaltonismo):
         self.dados_usuario = parser.parse_args()
 
         print(self.dados_usuario)
+
+        '''
+        Outros métodos e atributos de Ishihara:
+        '''
 
         self.janela_teste = tk.Tk()
         self.ishihara_placas: List[Dict[str, Any]] = self.carregar_placas()
@@ -70,7 +77,7 @@ class Ishihara(TesteDaltonismo):
         self.scrollbar.pack(side="right", fill="y")
 
         '''
-        lista com as placas de Ishihara, opções e respostas esperadas para cada caso 
+        Lista com as placas de Ishihara, opções e respostas esperadas para cada caso. 
         '''
         self.tx_placa = tk.Label(self.scrollable_frame, text="Placa 1")
         self.tx_placa.pack(pady=(10, 0))
@@ -90,16 +97,19 @@ class Ishihara(TesteDaltonismo):
         self.tx_resultado = tk.Label(self.janela_teste, text="")
         self.tx_resultado.pack(pady=(10, 0))
 
-        self.bt_finalizar = tk.Button(self.scrollable_frame, text="Finalizar teste", bd=4, bg='#4682B4', fg='#F5FFFA', activebackground='#B0E0E6', activeforeground='#4682B4', font=('arial', 10),command= self.janela_resultado, state=tk.DISABLED)
+        self.bt_finalizar = tk.Button(self.scrollable_frame, text="Gerar PDF", bd=4, bg='#4682B4', fg='#F5FFFA', activebackground='#B0E0E6', activeforeground='#4682B4', font=('arial', 10),command= self.janela_resultado, state=tk.DISABLED)
         self.bt_finalizar.pack(pady=(10, 0))
 
         self.mostrar_imagem(self.imagem_atual)
 
     def carregar_placas(self) -> List[Dict[str, Any]]:
+        '''
+        Neste método, são carregadas as placas de Ishihara, opções e respostas esperadas para cada caso. As placas estão presentes na pasta ishihara, no mesmo repositório que os demais arquivos do projeto.
+        '''
         return [
             {"image": "ishihara/Ishihara01.png", "options": ["1", "2", "12", "Nada"], "expected": {"normal": "12", "protanopia": "12", "deuteranopia": "12", "tritanopia": "12"}},
             {"image": "ishihara/Ishihara02.png", "options": ["3", "6", "8","Nada"], "expected": {"normal": "8", "protanopia": "3", "deuteranopia": "3", "tritanopia": "8"}}, 
-            {"image": "ishihara/Ishihara03.png", "options": ["3", "5", "6", "Nada"], "expected": {"normal": "6", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "12"}},
+            {"image": "ishihara/Ishihara03.png", "options": ["3", "5", "6", "Nada"], "expected": {"normal": "6", "protanopia": "Nada", "deuteranopia": "Nada","tritanopia": "12"}}, 
             {"image": "ishihara/Ishihara04.png", "options": ["10", "29", "70","Nada"], "expected": {"normal": "29", "protanopia": "70","deuteranopia": "70","tritanopia": "29"}},
             {"image": "ishihara/Ishihara05.jpg", "options": ["7", "57", "50","Nada"], "expected": {"normal": "57", "protanopia": "7","deuteranopia": "70","tritanopia": "57"}},
             {"image": "ishihara/Ishihara06.png", "options": ["2", "3", "5","Nada"], "expected": {"normal": "5", "protanopia": "2","deuteranopia": "2","tritanopia": "5"}},
@@ -137,6 +147,9 @@ class Ishihara(TesteDaltonismo):
         ]
 
     def mostrar_imagem(self, index: int) -> None:
+        '''
+        Este método é responsável por mostrar a imagem correspondente ao índice fornecido. Ele chama o método mostrar_resultados para computar e analisar a resposta do usuário. O método habilitar_botao é chamado e o bt_proxima é habilitado apenas se for selecionada uma resposta. Já o bt_finalizar só é habilitado após a última lâmina ser respondida.
+        '''
         if index >= len(self.ishihara_placas):
             self.mostrar_resultados()
             self.habilitar_botao('bt_proxima','disabled')
@@ -171,16 +184,26 @@ class Ishihara(TesteDaltonismo):
         self.bt_proxima.config(state=tk.DISABLED)
 
     def selecionar_op(self, *args: Any) -> None:
+        '''
+        Verifica se a opção foi selecionada e, se sim, o botão bt_proxima é habilitado.
+        '''
         if self.op_var.get(): 
             self.bt_proxima.config(state=tk.NORMAL)
 
     def px_imagem(self) -> None:
+        '''
+        Este método é responsável por mostrar a próxima imagem, acrescentando +1 ao índice e chamando o método mostrar_imagem, passando como parâmetro o índice atualizado. 
+        '''
         escolha_usuario = self.op_var.get()
         self.resp_t.append(escolha_usuario)
         self.imagem_atual += 1
         self.mostrar_imagem(self.imagem_atual)
 
     def mostrar_resultados(self) -> None:
+        '''
+        Este método é responsável por mostrar os resultados do usuário. Ele conta as respostas dos diferentes tipos de daltonismo e da visão normal, e determina um prognóstico com base nas contagens. 
+        O método faz isso através da comparação das respostas do usuário com as respostas esperadas, e exibe um resultado correspondente.
+        '''
         normal_count = 0
         protanopia_count = 0
         deuteranopia_count = 0
@@ -214,17 +237,19 @@ class Ishihara(TesteDaltonismo):
         else:
             diagnostico = "Indeterminado"
 
-        resul_.append(f"\nDiagnóstico Final: {diagnostico}")
+        resul_.append(f"\nPrognóstico Final: {diagnostico}")
 
         self.tx_resultado.config(text="\n".join(resul_))
         self.salvar_dados(diagnostico)
 
     def salvar_dados(self, diagnostico):
-      # Conectar ao banco de dados (ou criar um novo banco de dados .db)
+      '''
+      Este método salva os dados do usuário, incluindo o prognóstico final, em um bando de dados SQLite pacientes.db e cria, se não existi, uma tabela com colunas que receberão as informações do usuário, incluindo o prognóstico.
+      Com cursor.execute, ele insere os dados do usuário no banco de dados.
+      '''
       conn = sqlite3.connect('pacientes.db')
       cursor = conn.cursor()
-
-      # Criar a tabela com a coluna diagnostico
+        
       cursor.execute('''
         CREATE TABLE IF NOT EXISTS pacientes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -238,17 +263,12 @@ class Ishihara(TesteDaltonismo):
           )
       ''')
 
-      # Confirmar as mudanças
       conn.commit()
 
-      # Lista de objetos (dicionários) com os dados dos usuários
-
-      # Inserir dados na tabela a partir dos objetos
       cursor.execute('''
             INSERT INTO pacientes (nome, sobrenome, data_nascimento, telefone,  email, cpf, diagnostico) VALUES (?, ?, ?, ?, ?, ?, ?)
         ''', (self.dados_usuario.nome, self.dados_usuario.sobrenome, self.dados_usuario.data,self.dados_usuario.telefone,self.dados_usuario.email, self.dados_usuario.cpf, diagnostico))
 
-      # Confirmar as mudanças
       conn.commit()
 
     def janela_resultado(self)-> None:
