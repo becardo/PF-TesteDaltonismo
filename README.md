@@ -1,28 +1,62 @@
-Este é o repositório para o Projeto Final da disciplina de Programação Orientada a Objetos, ministrada pela professora Gabriela Nunes Lopes, na Universidade Federal de Minas Gerais. 
+# 👁️‍🗨️ Projeto Final - POO: Prognóstico de Daltonismo com Python
 
-Como tema para o projeto, utilizando a linguagem de programação Python, pensamos em trazer uma aplicação mais voltada para a área de detecção e prognóstico, como e com que ferramentas a tecnologia pode nos auxiliar nos dias de hoje com problemas que podem afetar nosso cotidiano. 
+Este é o repositório do **Projeto Final** da disciplina de **Programação Orientada a Objetos (POO)**, ministrada pela professora **Gabriela Nunes Lopes**, na **Universidade Federal de Minas Gerais (UFMG)**.
 
-Assim, chegamos no tema: _"Prognóstico de Daltonismo: como a tecnologia pode auxiliar na detecção do distúrbio através da automatização e acessibilidade"_. Uma ideia com o objetivo de tornar o exame prognóstico de daltonismo algo mais eficiênte, autônomo e claro, utilizando tudo o que a linguagem Python tem a nos oferecer.
+---
 
-O daltonismo é um disturbio de visão que afeta a capacidade de distinguir diferentes tons ou cores umas das outras, em geral as cores vermelho, verde e azul.
-Existem três tipos: 
+## 🧠 Tema
 
-*protanopia*, dificuldade em distinguir as cores azul e verde E vermelho e verde;
+**Prognóstico de Daltonismo: como a tecnologia pode auxiliar na detecção do distúrbio através da automatização e acessibilidade.**
 
-*deuteranopia*, dificuldade em distinguir verde e vermelho;
+Nosso objetivo foi desenvolver uma aplicação que una tecnologia e acessibilidade para tornar o **teste de daltonismo mais eficiente, autônomo e didático**, utilizando os recursos da linguagem **Python**.
 
-*tritanopia*, dificuldade em distiguir azul e amarelo.
+---
 
-Existe também a manifestação mais rara do disturbio, o daltonismo acromático, onde a pessoa não vê cores, apenas tons de cinza, preto e branco.
+## 🎯 Motivação
 
-Para termos um diagnóstico são feitos alguns testes com o profissional oftalmologista, e um desses testes é o Teste de Ishihara. No Teste de Ishihara são mostradas várias lâminas com círculos e números com cores estrategicamente escolhidas e, dependendo da resposta do que o paciente vê e comparando-as com respostas "esperadas", é feito um diagnóstico. 
+O daltonismo é um distúrbio visual que afeta a percepção das cores, principalmente nas combinações entre **vermelho, verde, azul e amarelo**. Existem diferentes tipos, como:
 
-Disposta essa pequena explicação, nosso projeto implementa o Teste de Ishihara. Utilizando o pacote Tkinter, uma interface gráfica padrão do Python, as lâminas de Ishihara serão mostradas uma a uma, e o usuário poderá selecionar (através de uma caixa de seleção) o que ele vê em cada lâmina. Cada resposta é analisada com base no que se espera em cada opção de resposta, qual tipo de daltonismo ela poderia corresponder. No final, é gerado um prognóstico de possível daltonismo e seu tipo. Será um prognóstico pois não somos profissionais de oftalmologia para dar diagnósticos por aí, portanto será apenas um aviso de "Ei! É possível que você seja daltonico, procure um oftalmologista! =D ".
+- **Protanopia:** dificuldade em distinguir azul e verde, e vermelho e verde  
+- **Deuteranopia:** dificuldade em distinguir verde e vermelho  
+- **Tritanopia:** dificuldade em distinguir azul e amarelo  
+- **Acromatopsia:** ausência total de percepção de cores (tons de cinza)
 
+O diagnóstico tradicional é feito por um profissional oftalmologista, e um dos testes mais conhecidos é o **Teste de Ishihara**, que utiliza lâminas com números e padrões coloridos para verificar a percepção visual do paciente.
 
-Do grupo,
+---
 
-Ana, Alice e Isaac
+## 🛠️ O que o projeto faz?
 
+Nosso sistema simula o **Teste de Ishihara**, permitindo que o usuário:
+
+1. Visualize lâminas do teste (em uma interface gráfica feita com **Tkinter**)
+2. Selecione o número que vê em cada lâmina
+3. Tenha suas respostas analisadas automaticamente
+4. Receba ao final um **prognóstico de possível daltonismo e seu tipo**
+
+> ⚠️ Observação: O resultado é apenas um **prognóstico automatizado**, não um diagnóstico oficial. Recomendamos sempre procurar um profissional oftalmologista. 😉
+
+---
+
+## 🖥️ Tecnologias utilizadas
+
+- **Python 3**
+- **Tkinter** — interface gráfica
+- **Orientação a Objetos (POO)**
+- **Imagens do Teste de Ishihara**
+
+---
+
+## 🧪 Como executar
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/repositorio.git
+   cd repositorio
+
+## Autores
+Ana Beatriz Soares Cardoso
+Alice Crispim Bruno
+Isaac Henrique de Paula
 
 
