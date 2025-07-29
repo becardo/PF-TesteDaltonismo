@@ -55,8 +55,7 @@ Nosso sistema simula o **Teste de Ishihara**, permitindo que o usuário:
    cd repositorio
 
 ## Autores
-Ana Beatriz Soares Cardoso
-Alice Crispim Bruno
-Isaac Henrique de Paula
+**Ana Beatriz Soares Cardoso** | **Alice Crispim Bruno** | **Isaac Henrique de Paula**
 
+Universidade Federal de Minas Gerais — POO 2023
 
